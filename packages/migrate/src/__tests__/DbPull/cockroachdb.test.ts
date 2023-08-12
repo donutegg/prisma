@@ -71,16 +71,12 @@ describeIf(!process.env.TEST_SKIP_COCKROACHDB)('cockroachdb', () => {
     expect(ctx.mocked['console.error'].mock.calls.join('\n')).toMatchInlineSnapshot(``)
   })
 
-  test('basic introspection (with postgresql provider) should fail', async () => {
+  test('basic introspection (with postgresql provider)', async () => {
     ctx.fixture('introspection/cockroachdb')
     const introspect = new DbPull()
     const result = introspect.parse(['--print', '--schema', 'with-postgresql-provider.prisma'])
-    await expect(result).rejects.toThrowErrorMatchingInlineSnapshot(`
-      You are trying to connect to a CockroachDB database, but the provider in your Prisma schema is \`postgresql\`. Please change it to \`cockroachdb\`.
-
-
-    `)
-    expect(ctx.mocked['console.log'].mock.calls.join('\n')).toMatchInlineSnapshot(``)
+    await expect(result).resolves.toMatchInlineSnapshot(``)
+    expect(ctx.mocked['console.log'].mock.calls.join('\n')).toMatchSnapshot()
     expect(ctx.mocked['console.info'].mock.calls.join('\n')).toMatchInlineSnapshot(``)
     expect(ctx.mocked['console.error'].mock.calls.join('\n')).toMatchInlineSnapshot(``)
   })
@@ -105,7 +101,7 @@ describeIf(!process.env.TEST_SKIP_COCKROACHDB)('cockroachdb', () => {
     expect(ctx.mocked['console.error'].mock.calls.join('\n')).toMatchInlineSnapshot(``)
   })
 
-  test('basic introspection (with postgresql provider) --url should fail', async () => {
+  test('basic introspection (with cockroach provider) --url ', async () => {
     ctx.fixture('introspection/cockroachdb')
     const introspect = new DbPull()
     const result = introspect.parse([
@@ -115,11 +111,7 @@ describeIf(!process.env.TEST_SKIP_COCKROACHDB)('cockroachdb', () => {
       '--schema',
       'with-postgresql-provider.prisma',
     ])
-    await expect(result).rejects.toThrowErrorMatchingInlineSnapshot(`
-      You are trying to connect to a CockroachDB database, but the provider in your Prisma schema is \`postgresql\`. Please change it to \`cockroachdb\`.
-
-
-    `)
+    await expect(result).resolves.toMatchInlineSnapshot(``)
     expect(ctx.mocked['console.log'].mock.calls.join('\n')).toMatchSnapshot()
     expect(ctx.mocked['console.info'].mock.calls.join('\n')).toMatchInlineSnapshot(``)
     expect(ctx.mocked['console.error'].mock.calls.join('\n')).toMatchInlineSnapshot(``)

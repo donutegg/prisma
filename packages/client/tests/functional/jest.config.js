@@ -1,17 +1,8 @@
 'use strict'
 
 const isMacOrWindowsCI = Boolean(process.env.CI) && ['darwin', 'win32'].includes(process.platform)
-const isBuildkiteCI = Boolean(process.env.BUILDKITE)
 
 module.exports = () => {
-  // Default
-  let testTimeout = 30_000
-  if (isMacOrWindowsCI) {
-    testTimeout = 100_000
-  } else if (isBuildkiteCI) {
-    testTimeout = 50_000
-  }
-
   const configCommon = {
     testMatch: ['**/*.ts', '!(**/*.d.ts)', '!(**/_utils/**)', '!(**/_*.ts)', '!(**/.generated/**)'],
     transformIgnorePatterns: [],
@@ -19,7 +10,7 @@ module.exports = () => {
     globalSetup: './_utils/globalSetup.js',
     snapshotSerializers: ['@prisma/get-platform/src/test-utils/jestSnapshotSerializer'],
     setupFilesAfterEnv: ['./_utils/setupFilesAfterEnv.ts'],
-    testTimeout,
+    testTimeout: isMacOrWindowsCI ? 100_000 : 30_000,
     collectCoverage: process.env.CI ? true : false,
   }
 

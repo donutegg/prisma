@@ -7,9 +7,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong field type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Json but found Product.title of type String.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong field type', async () => {
+→ XX   const products = prisma.product.findMany({
+          where: {
+            properties1: {
+              equals: prisma.product.fields.title
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            }
+          }
+        })
+
+Argument equals: Got invalid value prisma.product.fields.title on prisma.findManyProduct. Provided StringFieldRefInput<Product>, expected Json or JsonFieldRefInput or JsonNullValueFilter.
+
+
 `;
 
 exports[`field-reference.json (provider=mongodb) wrong field type 1`] = `
@@ -19,9 +29,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong field type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Json but found Product.title of type String.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong field type', async () => {
+→ XX   const products = prisma.product.findMany({
+          where: {
+            properties1: {
+              equals: prisma.product.fields.title
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            }
+          }
+        })
+
+Argument equals: Got invalid value prisma.product.fields.title on prisma.findManyProduct. Provided StringFieldRefInput<Product>, expected Json or JsonFieldRefInput.
+
+
 `;
 
 exports[`field-reference.json (provider=mysql) wrong field type 1`] = `
@@ -31,9 +51,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong field type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Json but found Product.title of type String.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong field type', async () => {
+→ XX   const products = prisma.product.findMany({
+          where: {
+            properties1: {
+              equals: prisma.product.fields.title
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            }
+          }
+        })
+
+Argument equals: Got invalid value prisma.product.fields.title on prisma.findManyProduct. Provided StringFieldRefInput<Product>, expected Json or JsonFieldRefInput or JsonNullValueFilter.
+
+
 `;
 
 exports[`field-reference.json (provider=postgresql) wrong field type 1`] = `
@@ -43,7 +73,17 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong field type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Json but found Product.title of type String.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong field type', async () => {
+→ XX   const products = prisma.product.findMany({
+          where: {
+            properties1: {
+              equals: prisma.product.fields.title
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            }
+          }
+        })
+
+Argument equals: Got invalid value prisma.product.fields.title on prisma.findManyProduct. Provided StringFieldRefInput<Product>, expected Json or JsonFieldRefInput or JsonNullValueFilter.
+
+
 `;

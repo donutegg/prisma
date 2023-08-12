@@ -6,7 +6,7 @@ import { ensureDir } from 'fs-extra'
 import os from 'os'
 import path from 'path'
 
-import { BinaryType } from './BinaryType'
+import { BinaryType } from './download'
 
 const debug = Debug('prisma:cache-dir')
 

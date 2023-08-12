@@ -12,7 +12,7 @@ if (process.env.CI) {
 
 const ctx = jestContext.new().add(jestConsoleContext()).assemble()
 
-describe('schema wasm', () => {
+describe('format wasm', () => {
   describe('diff', () => {
     test('2-spaces', async () => {
       const schema = await fs.promises.readFile(path.join(fixturesPath, 'format', 'schema-2-spaces.prisma'), {

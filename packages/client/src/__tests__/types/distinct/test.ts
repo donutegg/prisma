@@ -13,14 +13,6 @@ async function main() {
   await prisma.user.findMany({
     distinct: ['id', 'email', 'age', 'followerCount', 'name'],
   })
-
-  await prisma.user.findMany({
-    distinct: 'id',
-  })
-
-  await prisma.user.findMany({
-    distinct: 'email',
-  })
 }
 
 main().catch((e) => {

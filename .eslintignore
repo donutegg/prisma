@@ -14,7 +14,6 @@ packages/client/generator-build/
 packages/client/declaration/
 packages/client/runtime/
 packages/client/src/__tests__/types/
-packages/client/scripts/default-index.js
 
 # cli
 packages/cli/prisma-client/
@@ -22,3 +21,6 @@ packages/cli/install/
 packages/cli/preinstall/
 packages/cli/**/tmp-*
 reproductions/
+
+# others
+packages/ni/

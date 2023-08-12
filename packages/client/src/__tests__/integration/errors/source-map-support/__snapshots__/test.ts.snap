@@ -6,9 +6,12 @@ Invalid \`prisma.user.findUnique()\` invocation:
 
 {
   where: {
-+   id: String
+    id: null
+        ~~~~
   }
 }
 
-Argument \`id\` must not be null.
+Argument id for where.id must not be null. Please use undefined instead.
+
+
 `;

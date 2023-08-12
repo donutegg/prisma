@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker'
+import { getQueryEngineProtocol } from '@prisma/internals'
 
 import { setupTestSuite } from './_matrix'
 // @ts-ignore
@@ -124,11 +125,13 @@ setupTestSuite(({ contentProperty }) => {
           `,
       )
     } else {
-      await expect(comment).rejects.toThrow(
-        expect.objectContaining({
-          message: expect.stringContaining('Argument `set` must not be null'),
-        }),
-      )
+      if (getQueryEngineProtocol() === 'graphql') {
+        await expect(comment).rejects.toThrow(
+          expect.objectContaining({
+            message: expect.stringContaining('Argument set for data.content.set must not be null'),
+          }),
+        )
+      }
     }
   })
 
@@ -153,10 +156,10 @@ setupTestSuite(({ contentProperty }) => {
               }
           `,
       )
-    } else {
+    } else if (getQueryEngineProtocol() === 'graphql') {
       await expect(comment).rejects.toThrow(
         expect.objectContaining({
-          message: expect.stringContaining('Argument `content`'),
+          message: expect.stringContaining('Argument content for data.content must not be null'),
         }),
       )
     }
@@ -456,10 +459,12 @@ setupTestSuite(({ contentProperty }) => {
         }
       `,
       )
-    } else {
+    } else if (getQueryEngineProtocol() === 'graphql') {
       await expect(comment).rejects.toThrow(
         expect.objectContaining({
-          message: expect.stringContaining('Unknown argument `unset`'),
+          message: expect.stringContaining(
+            'Unknown arg `unset` in data.content.unset for type CommentContentUpdateEnvelopeInput',
+          ),
         }),
       )
     }
@@ -503,10 +508,12 @@ setupTestSuite(({ contentProperty }) => {
         }
       `,
       )
-    } else {
+    } else if (getQueryEngineProtocol() === 'graphql') {
       await expect(comment).rejects.toThrow(
         expect.objectContaining({
-          message: expect.stringContaining('Unknown argument `upsert`'),
+          message: expect.stringContaining(
+            'Unknown arg `upsert` in data.content.upsert for type CommentContentUpdateEnvelopeInput',
+          ),
         }),
       )
     }
@@ -557,10 +564,12 @@ setupTestSuite(({ contentProperty }) => {
         }
       `,
       )
-    } else {
+    } else if (getQueryEngineProtocol() === 'graphql') {
       await expect(comment).rejects.toThrow(
         expect.objectContaining({
-          message: expect.stringContaining('Unknown argument `upsert`'),
+          message: expect.stringContaining(
+            'Unknown arg `upsert` in data.content.upsert for type CommentContentUpdateEnvelopeInput',
+          ),
         }),
       )
     }

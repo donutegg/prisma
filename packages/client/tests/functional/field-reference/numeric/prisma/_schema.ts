@@ -6,6 +6,7 @@ export default testMatrix.setupSchema(({ provider, fieldType, wrongFieldType }) 
   return /* Prisma */ `
   generator client {
     provider = "prisma-client-js"
+    previewFeatures = ["fieldReference"]
   }
   
   datasource db {

@@ -17,8 +17,6 @@
   <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
   <a href="https://slack.prisma.io/">Slack</a>
   <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="https://pris.ly/discord">Discord</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
   <a href="https://twitter.com/prisma">Twitter</a>
 </div>
 

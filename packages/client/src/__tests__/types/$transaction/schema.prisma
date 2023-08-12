@@ -4,13 +4,14 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "@prisma/client"
+  provider             = "prisma-client-js"
+  output               = "@prisma/client"
+  experimentalFeatures = ["transactionApi"]
 }
 
 // / User model comment
 model User {
-  id    String  @id @default(uuid())
+  id    String  @default(uuid()) @id
   email String  @unique
   name  String?
   info  Json?

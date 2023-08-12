@@ -6,6 +6,7 @@ import {
   getConfig,
   getEnvPaths,
   getRelativeSchemaPath,
+  mapPreviewFeatures,
   parseEnvValue,
   printConfigWarnings,
 } from '@prisma/internals'
@@ -35,7 +36,7 @@ export async function getTestClient(schemaDir?: string, printWarnings?: boolean)
   }
 
   const generator = config.generators.find((g) => parseEnvValue(g.provider) === 'prisma-client-js')
-  const previewFeatures = extractPreviewFeatures(config)
+  const previewFeatures = mapPreviewFeatures(extractPreviewFeatures(config))
   const platform = await getPlatform()
   const clientEngineType = getClientEngineType(generator!)
   ;(global as any).TARGET_ENGINE_TYPE = clientEngineType === ClientEngineType.Library ? 'library' : 'binary'
@@ -66,35 +67,9 @@ export async function getTestClient(schemaDir?: string, printWarnings?: boolean)
 }
 
 /**
- * Options of `generateTestClient` function.
- */
-type GenerateTestClientOptions = {
-  /**
-   * Directory to search for the schema in and generate the client in.
-   */
-  projectDir?: string
-
-  /**
-   * Overrides the query engine type, if specified, and makes the client ignore
-   * the `PRISMA_CLIENT_ENGINE_TYPE` environment variable and `engineType` schema field.
-   */
-  engineType?: ClientEngineType
-
-  /**
-   * Forces generating the Data Proxy client, overrides the `TEST_DATA_PROXY`
-   * environment variable.
-   */
-  dataProxy?: boolean
-}
-
-/**
  * Actually generates a test client with its own query-engine into ./@prisma/client
  */
-export async function generateTestClient({
-  projectDir,
-  engineType,
-  dataProxy,
-}: GenerateTestClientOptions = {}): Promise<any> {
+export async function generateTestClient(projectDir?: string): Promise<any> {
   if (!projectDir) {
     const callsite = parse(new Error('').stack!)
     projectDir = path.dirname(callsite[1].file!)
@@ -105,7 +80,5 @@ export async function generateTestClient({
     useLocalRuntime: false,
     transpile: true,
     useBuiltRuntime: false,
-    overrideEngineType: engineType,
-    overrideDataProxy: dataProxy,
   })
 }

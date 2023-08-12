@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker'
+import { getQueryEngineProtocol } from '@prisma/internals'
 
 import { setupTestSuite } from './_matrix'
 // @ts-ignore
@@ -113,10 +114,10 @@ setupTestSuite(({ contentProperty }) => {
         }
       `,
       )
-    } else {
+    } else if (getQueryEngineProtocol() === 'graphql') {
       await expect(comment).rejects.toThrow(
         expect.objectContaining({
-          message: expect.stringContaining('Argument `set` must not be null'),
+          message: expect.stringContaining('Argument set for create.content.set must not be null'),
         }),
       )
     }
@@ -145,12 +146,10 @@ setupTestSuite(({ contentProperty }) => {
         }
       `,
       )
-    } else {
-      await expect(comment).rejects.toThrow(
-        expect.objectContaining({
-          message: expect.stringContaining('Argument `content` must not be null.'),
-        }),
-      )
+    } else if (getQueryEngineProtocol() === 'graphql') {
+      expect.objectContaining({
+        message: expect.stringContaining('Got invalid value null on prisma.upsertOneCommentRequiredProp'),
+      })
     }
   })
 

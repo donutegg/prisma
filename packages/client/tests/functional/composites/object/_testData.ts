@@ -4,12 +4,10 @@ export function commentDataA(id: string) {
     content: {
       set: {
         text: 'Hello World',
-        upvotes: [
-          {
-            vote: true,
-            userId: '10',
-          },
-        ],
+        upvotes: {
+          vote: true,
+          userId: '10',
+        },
       },
     },
   }

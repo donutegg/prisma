@@ -3,7 +3,9 @@ import { arg, checkUnsupportedDataProxy, Command, format, HelpError, isError, lo
 import { bold, dim, green, red } from 'kleur/colors'
 
 import { Migrate } from '../Migrate'
+import { throwUpgradeErrorIfOldMigrate } from '../utils/detectOldMigrate'
 import { ensureDatabaseExists, getDatasourceInfo } from '../utils/ensureDatabaseExists'
+import { EarlyAccessFeatureFlagWithMigrateError, ExperimentalFlagWithMigrateError } from '../utils/flagErrors'
 import { getSchemaPathAndPrint } from '../utils/getSchemaPathAndPrint'
 import { printDatasource } from '../utils/printDatasource'
 import { printFilesFromMigrationIds } from '../utils/printFiles'
@@ -43,6 +45,8 @@ ${bold('Examples')}
       {
         '--help': Boolean,
         '-h': '--help',
+        '--experimental': Boolean,
+        '--early-access-feature': Boolean,
         '--schema': String,
         '--telemetry-information': String,
       },
@@ -59,11 +63,21 @@ ${bold('Examples')}
       return this.help()
     }
 
+    if (args['--experimental']) {
+      throw new ExperimentalFlagWithMigrateError()
+    }
+
+    if (args['--early-access-feature']) {
+      throw new EarlyAccessFeatureFlagWithMigrateError()
+    }
+
     loadEnvFile(args['--schema'], true)
 
     const schemaPath = await getSchemaPathAndPrint(args['--schema'])
 
     printDatasource({ datasourceInfo: await getDatasourceInfo({ schemaPath }) })
+
+    throwUpgradeErrorIfOldMigrate(schemaPath)
 
     const migrate = new Migrate(schemaPath)
 

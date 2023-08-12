@@ -49,7 +49,7 @@ describe('getGenerators', () => {
           "prettyName": "This is a pretty name",
           "requiresEngines": [
             "queryEngine",
-            "schemaEngine",
+            "migrationEngine",
           ],
         },
       ]
@@ -133,7 +133,7 @@ describe('getGenerators', () => {
           "prettyName": "This is a pretty name",
           "requiresEngines": [
             "queryEngine",
-            "schemaEngine",
+            "migrationEngine",
           ],
         },
       ]
@@ -225,7 +225,7 @@ describe('getGenerators', () => {
           "prettyName": "This is a pretty name",
           "requiresEngines": [
             "queryEngine",
-            "schemaEngine",
+            "migrationEngine",
           ],
         },
       ]
@@ -317,7 +317,7 @@ describe('getGenerators', () => {
           "prettyName": "This is a pretty name",
           "requiresEngines": [
             "queryEngine",
-            "schemaEngine",
+            "migrationEngine",
           ],
         },
       ]
@@ -410,7 +410,7 @@ describe('getGenerators', () => {
           "prettyName": "This is a pretty name",
           "requiresEngines": [
             "queryEngine",
-            "schemaEngine",
+            "migrationEngine",
           ],
         },
       ]
@@ -517,7 +517,7 @@ describe('getGenerators', () => {
           "prettyName": "This is a pretty name",
           "requiresEngines": [
             "queryEngine",
-            "schemaEngine",
+            "migrationEngine",
           ],
         },
       ]
@@ -592,7 +592,7 @@ describe('getGenerators', () => {
       },
     }
 
-    const schemaEngine = await resolveBinary(BinaryType.SchemaEngineBinary)
+    const migrationEngine = await resolveBinary(BinaryType.MigrationEngineBinary)
 
     const queryEngineBinaryType = getCliQueryEngineBinaryType()
     const queryEnginePath = await resolveBinary(queryEngineBinaryType)
@@ -612,8 +612,8 @@ describe('getGenerators', () => {
 
     // we override queryEngine, so its paths should be equal to the one of the generator
     expect(options[0]?.queryEngine?.[platform]).toBe(queryEnginePath)
-    // we did not override the schemaEngine, so their paths should not be equal
-    expect(options[0]?.schemaEngine?.[platform]).not.toBe(schemaEngine)
+    // we did not override the migrationEngine, so their paths should not be equal
+    expect(options[0]?.migrationEngine?.[platform]).not.toBe(migrationEngine)
 
     generators.forEach((g) => g.stop())
   })
@@ -824,7 +824,7 @@ describe('getGenerators', () => {
     } catch (e) {
       expect(stripAnsi(e.message)).toMatchInlineSnapshot(`
         "
-        metrics preview feature is not yet available with --accelerate or --data-proxy.
+        metrics preview feature is not yet available with --data-proxy.
         Please remove metrics from the previewFeatures in your schema.
 
         More information about Data Proxy: https://pris.ly/d/data-proxy

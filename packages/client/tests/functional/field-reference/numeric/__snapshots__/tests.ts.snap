@@ -7,9 +7,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type BigInt but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected BigInt or BigIntFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=cockroachdb, fieldType=Float) wrong column numeric type 1`] = `
@@ -19,9 +29,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Float but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected Float or FloatFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=cockroachdb, fieldType=Int) wrong column numeric type 1`] = `
@@ -31,9 +51,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Int but found Product.wrongType of type Float.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided FloatFieldRefInput<Product>, expected Int or IntFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=mongodb, fieldType=BigInt) wrong column numeric type 1`] = `
@@ -43,9 +73,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type BigInt but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected BigInt or BigIntFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=mongodb, fieldType=Float) wrong column numeric type 1`] = `
@@ -55,9 +95,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Float but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected Float or FloatFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=mongodb, fieldType=Int) wrong column numeric type 1`] = `
@@ -67,9 +117,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Int but found Product.wrongType of type Float.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided FloatFieldRefInput<Product>, expected Int or IntFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=mysql, fieldType=BigInt) wrong column numeric type 1`] = `
@@ -79,9 +139,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type BigInt but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected BigInt or BigIntFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=mysql, fieldType=Float) wrong column numeric type 1`] = `
@@ -91,9 +161,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Float but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected Float or FloatFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=mysql, fieldType=Int) wrong column numeric type 1`] = `
@@ -103,9 +183,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Int but found Product.wrongType of type Float.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided FloatFieldRefInput<Product>, expected Int or IntFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=postgresql, fieldType=BigInt) wrong column numeric type 1`] = `
@@ -115,9 +205,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type BigInt but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected BigInt or BigIntFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=postgresql, fieldType=Float) wrong column numeric type 1`] = `
@@ -127,9 +227,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Float but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected Float or FloatFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=postgresql, fieldType=Int) wrong column numeric type 1`] = `
@@ -139,9 +249,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Int but found Product.wrongType of type Float.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided FloatFieldRefInput<Product>, expected Int or IntFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=sqlite, fieldType=BigInt) wrong column numeric type 1`] = `
@@ -151,9 +271,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type BigInt but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected BigInt or BigIntFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=sqlite, fieldType=Float) wrong column numeric type 1`] = `
@@ -163,9 +293,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Float but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected Float or FloatFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=sqlite, fieldType=Int) wrong column numeric type 1`] = `
@@ -175,9 +315,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Int but found Product.wrongType of type Float.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided FloatFieldRefInput<Product>, expected Int or IntFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=sqlserver, fieldType=BigInt) wrong column numeric type 1`] = `
@@ -187,9 +337,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type BigInt but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected BigInt or BigIntFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=sqlserver, fieldType=Float) wrong column numeric type 1`] = `
@@ -199,9 +359,19 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Float but found Product.wrongType of type Int.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided IntFieldRefInput<Product>, expected Float or FloatFieldRefInput.
+
+
 `;
 
 exports[`field-reference.numeric (provider=sqlserver, fieldType=Int) wrong column numeric type 1`] = `
@@ -211,7 +381,17 @@ Invalid \`prisma.product.findMany()\` invocation in
 
   XX 
   XX // TODO: Edge: skipped because of the error snapshot
-  XX testIf(runtime !== 'edge')('wrong column numeric type', async () => {
-→ XX   const products = prisma.product.findMany(
-Input error. Expected a referenced scalar field of type Int but found Product.wrongType of type Float.
+  XX testIf(runtime !== 'edge' && getQueryEngineProtocol() !== 'json')('wrong column numeric type', async () => {
+→ XX   const products = prisma.product.findMany({
+         where: {
+           quantity: {
+             gt: prisma.product.fields.wrongType
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           }
+         }
+       })
+
+Argument gt: Got invalid value prisma.product.fields.wrongType on prisma.findManyProduct. Provided FloatFieldRefInput<Product>, expected Int or IntFieldRefInput.
+
+
 `;

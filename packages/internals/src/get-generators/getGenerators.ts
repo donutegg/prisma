@@ -10,10 +10,11 @@ import { bold, gray, green, red, underline, yellow } from 'kleur/colors'
 import pMap from 'p-map'
 import path from 'path'
 
-import { getConfig, getDMMF, vercelPkgPathRegex } from '..'
+import { getConfig, getDMMF } from '..'
 import { Generator } from '../Generator'
 import { resolveOutput } from '../resolveOutput'
 import { extractPreviewFeatures } from '../utils/extractPreviewFeatures'
+import { mapPreviewFeatures } from '../utils/mapPreviewFeatures'
 import { missingDatasource } from '../utils/missingDatasource'
 import { missingModelMessage, missingModelMessageMongoDB } from '../utils/missingGeneratorMessage'
 import { parseBinaryTargetsEnvValue, parseEnvValue } from '../utils/parseEnvValue'
@@ -95,7 +96,7 @@ export async function getGenerators(options: GetGeneratorOptions): Promise<Gener
   if (version && !prismaPath) {
     const potentialPath = eval(`require('path').join(__dirname, '..')`)
     // for pkg we need to make an exception
-    if (!potentialPath.match(vercelPkgPathRegex)) {
+    if (!potentialPath.startsWith('/snapshot/')) {
       const downloadParams: DownloadOptions = {
         binaries: {
           [queryEngineBinaryType]: potentialPath,
@@ -126,7 +127,8 @@ export async function getGenerators(options: GetGeneratorOptions): Promise<Gener
 
   printConfigWarnings(config.warnings)
 
-  const previewFeatures = extractPreviewFeatures(config)
+  // TODO: This needs a better abstraction, but we don't have any better right now
+  const previewFeatures = mapPreviewFeatures(extractPreviewFeatures(config))
 
   const dmmf = await getDMMF({
     datamodel,
@@ -377,6 +379,19 @@ async function validateGenerators(generators: GeneratorConfig[]): Promise<void> 
   const platform = await getPlatform()
 
   for (const generator of generators) {
+    if (parseEnvValue(generator.provider) === 'photonjs') {
+      throw new Error(`Oops! Photon has been renamed to Prisma Client. Please make the following adjustments:
+  1. Rename ${red('provider = "photonjs"')} to ${green('provider = "prisma-client-js"')} in your ${bold(
+        'schema.prisma',
+      )} file.
+  2. Replace your ${bold('package.json')}'s ${red('@prisma/photon')} dependency to ${green('@prisma/client')}
+  3. Replace ${red("import { Photon } from '@prisma/photon'")} with ${green(
+        "import { PrismaClient } from '@prisma/client'",
+      )} in your code.
+  4. Run ${green('prisma generate')} again.
+      `)
+    }
+
     if (generator.config.platforms) {
       throw new Error(
         `The \`platforms\` field on the generator definition is deprecated. Please rename it to \`binaryTargets\`.`,

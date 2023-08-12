@@ -12,9 +12,7 @@ test('assert node data proxy runtime can be used', async () => {
       data: { email: 'jane@doe.io' },
     })
   } catch (e) {
-    expect(e.message).toMatchInlineSnapshot(
-      `"Datasource URL must use prisma:// protocol when --accelerate or --data-proxy are used"`,
-    )
+    expect(e.message).toMatchInlineSnapshot(`"Datasource URL must use prisma:// protocol when --data-proxy is used"`)
   }
 })
 
@@ -32,9 +30,7 @@ test('assert edge data proxy runtime can be used', async () => {
       data: { email: 'jane@doe.io' },
     })
   } catch (e) {
-    expect(e.message).toMatchInlineSnapshot(
-      `"Datasource URL must use prisma:// protocol when --accelerate or --data-proxy are used"`,
-    )
+    expect(e.message).toMatchInlineSnapshot(`"Datasource URL must use prisma:// protocol when --data-proxy is used"`)
   }
 })
 
@@ -57,7 +53,7 @@ test('runtime files exists', async () => {
   "edge.js",
   "index-browser.d.ts",
   "index-browser.js",
-  "library.d.ts",
+  "index.d.ts",
 ]
 `)
 })

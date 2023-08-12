@@ -11,15 +11,18 @@ const functionPolyfillPath = path.join(fillPluginPath, 'fillers', 'function.ts')
 const runtimeDir = path.resolve(__dirname, '..', 'runtime')
 
 // we define the config for runtime
-function nodeRuntimeBuildConfig(targetEngineType: 'binary' | 'library' | 'data-proxy'): BuildOptions {
+function nodeRuntimeBuildConfig(
+  targetEngineType: 'binary' | 'library' | 'data-proxy' | 'all',
+  outFileName: string = targetEngineType,
+): BuildOptions {
   return {
     name: targetEngineType,
     entryPoints: ['src/runtime/index.ts'],
-    outfile: `runtime/${targetEngineType}`,
+    outfile: `runtime/${outFileName}`,
     bundle: true,
     minify: true,
     sourcemap: 'linked',
-    emitTypes: targetEngineType === 'library',
+    emitTypes: targetEngineType === 'all',
     define: {
       NODE_CLIENT: 'true',
       TARGET_ENGINE_TYPE: JSON.stringify(targetEngineType),
@@ -93,29 +96,22 @@ const generatorBuildConfig: BuildOptions = {
   emitTypes: false,
 }
 
-// default-index.js file in scripts
-const defaultIndexConfig: BuildOptions = {
-  name: 'default-index',
-  entryPoints: ['src/scripts/default-index.ts'],
-  outfile: 'scripts/default-index',
-  bundle: true,
-  emitTypes: false,
-}
-
 function writeDtsRexport(fileName: string) {
-  fs.writeFileSync(path.join(runtimeDir, fileName), 'export * from "./library"\n')
+  fs.writeFileSync(path.join(runtimeDir, fileName), 'export * from "./index"\n')
 }
 
 void build([
   generatorBuildConfig,
+  // Exists for backward compatibility. Could be removed in next major
+  nodeRuntimeBuildConfig('all', 'index'),
   nodeRuntimeBuildConfig('binary'),
   nodeRuntimeBuildConfig('library'),
   nodeRuntimeBuildConfig('data-proxy'),
   browserBuildConfig,
   edgeRuntimeBuildConfig,
   edgeEsmRuntimeBuildConfig,
-  defaultIndexConfig,
 ]).then(() => {
   writeDtsRexport('binary.d.ts')
+  writeDtsRexport('library.d.ts')
   writeDtsRexport('data-proxy.d.ts')
 })

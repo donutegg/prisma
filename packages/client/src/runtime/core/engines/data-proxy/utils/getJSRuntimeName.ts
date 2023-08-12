@@ -9,5 +9,5 @@ export function getJSRuntimeName() {
     return 'node'
   }
 
-  return 'browser-like'
+  return 'browser'
 }

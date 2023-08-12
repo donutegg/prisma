@@ -102,7 +102,7 @@ describe('generatorHandler', () => {
         },
         "prettyName": "This is a pretty name",
         "requiresEngines": [
-          "schema-engine",
+          "migration-engine",
           "query-engine",
         ],
         "requiresGenerators": [

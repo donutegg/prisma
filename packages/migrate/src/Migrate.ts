@@ -5,14 +5,14 @@ import { dim } from 'kleur/colors'
 import logUpdate from 'log-update'
 import path from 'path'
 
-import { SchemaEngine } from './SchemaEngine'
+import { MigrateEngine } from './MigrateEngine'
 import type { EngineArgs, EngineResults } from './types'
 import { NoSchemaFoundError } from './utils/errors'
 
 const packageJson = eval(`require('../package.json')`)
 
 export class Migrate {
-  public engine: SchemaEngine
+  public engine: MigrateEngine
   private schemaPath?: string
   public migrationsDirectoryPath?: string
   constructor(schemaPath?: string, enabledPreviewFeatures?: string[]) {
@@ -21,13 +21,13 @@ export class Migrate {
     if (schemaPath) {
       this.schemaPath = this.getSchemaPath(schemaPath)
       this.migrationsDirectoryPath = path.join(path.dirname(this.schemaPath), 'migrations')
-      this.engine = new SchemaEngine({
+      this.engine = new MigrateEngine({
         projectDir: path.dirname(this.schemaPath),
         schemaPath: this.schemaPath,
         enabledPreviewFeatures,
       })
     } else {
-      this.engine = new SchemaEngine({
+      this.engine = new MigrateEngine({
         projectDir: process.cwd(),
         enabledPreviewFeatures,
       })

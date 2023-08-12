@@ -1,4 +1,4 @@
-import { SchemaEngine } from '@prisma/migrate'
+import { MigrateEngine } from '@prisma/migrate'
 import slugify from '@sindresorhus/slugify'
 import fs from 'fs-jetpack'
 import type { FSJetpack } from 'fs-jetpack/types'
@@ -301,7 +301,7 @@ async function setupScenario(kind: string, input: Input, scenario: Scenario) {
     ${datasourceBlock}
   `
 
-  const engine = new SchemaEngine({
+  const engine = new MigrateEngine({
     projectDir: process.cwd(),
   })
   const introspectionResult = await engine.introspect({ schema: schemaBase })

@@ -36,7 +36,7 @@ export async function ensureBinariesExist() {
 
   const binaries = {
     [cliQueryEngineBinaryType]: binaryDir,
-    [BinaryType.SchemaEngineBinary]: binaryDir,
+    [BinaryType.MigrationEngineBinary]: binaryDir,
   }
   debug(`binaries to download ${Object.keys(binaries).join(', ')}`)
   await download({
@@ -62,8 +62,6 @@ path.join(__dirname, '../query-engine-darwin-arm64')
 path.join(__dirname, '../query-engine-debian-openssl-1.0.x')
 path.join(__dirname, '../query-engine-debian-openssl-1.1.x')
 path.join(__dirname, '../query-engine-debian-openssl-3.0.x')
-path.join(__dirname, '../query-engine-linux-static-x64')
-path.join(__dirname, '../query-engine-linux-static-arm64')
 path.join(__dirname, '../query-engine-rhel-openssl-1.0.x')
 path.join(__dirname, '../query-engine-rhel-openssl-1.1.x')
 path.join(__dirname, '../query-engine-rhel-openssl-3.0.x')

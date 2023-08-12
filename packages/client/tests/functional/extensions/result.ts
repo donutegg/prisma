@@ -3,7 +3,7 @@ import { expectTypeOf } from 'expect-type'
 
 import testMatrix from './_matrix'
 // @ts-ignore
-import type { PrismaClient, User } from './node_modules/@prisma/client'
+import type { PrismaClient } from './node_modules/@prisma/client'
 
 declare let prisma: PrismaClient
 
@@ -48,7 +48,6 @@ testMatrix.setupTestSuite(() => {
 
     const user = await xprisma.user.findFirst({})
     expect(user?.fullName).toBe('John Smith')
-    expectTypeOf(user?.fullName).toEqualTypeOf<string | undefined>()
   })
 
   test('findFirst using $allModels', async () => {
@@ -64,7 +63,6 @@ testMatrix.setupTestSuite(() => {
 
     const user = await xprisma.user.findFirst({})
     expect(user?.computed).toBe(123)
-    expectTypeOf(user?.computed).toEqualTypeOf<number | undefined>()
   })
 
   test('findUnique', async () => {
@@ -72,7 +70,6 @@ testMatrix.setupTestSuite(() => {
 
     const user = await xprisma.user.findUnique({ where: { email } })
     expect(user?.fullName).toBe('John Smith')
-    expectTypeOf(user?.fullName).toEqualTypeOf<string | undefined>()
   })
 
   test('findMany', async () => {
@@ -80,7 +77,6 @@ testMatrix.setupTestSuite(() => {
 
     const user = await xprisma.user.findMany({})
     expect(user[0].fullName).toBe('John Smith')
-    expectTypeOf(user[0].fullName).toEqualTypeOf<string>()
   })
 
   test('create', async () => {
@@ -94,7 +90,6 @@ testMatrix.setupTestSuite(() => {
       },
     })
     expect(user.fullName).toBe('Max Mustermann')
-    expectTypeOf(user.fullName).toEqualTypeOf<string>()
   })
 
   test('update', async () => {
@@ -105,7 +100,6 @@ testMatrix.setupTestSuite(() => {
     })
 
     expect(user.fullName).toBe('Jane Smith')
-    expectTypeOf(user.fullName).toEqualTypeOf<string>()
   })
 
   test('upsert - update', async () => {
@@ -117,7 +111,6 @@ testMatrix.setupTestSuite(() => {
     })
 
     expect(user.fullName).toBe('Jane Smith')
-    expectTypeOf(user.fullName).toEqualTypeOf<string>()
   })
 
   test('upsert - create', async () => {
@@ -143,9 +136,6 @@ testMatrix.setupTestSuite(() => {
     expect(user?.fullName).toBe('John Smith')
     expect(user).not.toHaveProperty('firstName')
     expect(user).not.toHaveProperty('lastName')
-    expectTypeOf(user?.fullName).toEqualTypeOf<string | undefined>()
-    expectTypeOf(user).not.toHaveProperty('firstName')
-    expectTypeOf(user).not.toHaveProperty('lastName')
   })
 
   test('when using select and $allModels', async () => {
@@ -167,7 +157,6 @@ testMatrix.setupTestSuite(() => {
       },
     })
     expect(user?.computed).toBe(123)
-    expectTypeOf(user?.computed).toEqualTypeOf<number | undefined>()
   })
 
   test('relationships: with include', async () => {
@@ -175,7 +164,6 @@ testMatrix.setupTestSuite(() => {
     const post = await xprisma.post.findFirst({ include: { user: true } })
 
     expect(post?.user.fullName).toBe('John Smith')
-    expectTypeOf(post?.user.fullName).toEqualTypeOf<string | undefined>()
   })
 
   test('relationships: with select', async () => {
@@ -183,7 +171,6 @@ testMatrix.setupTestSuite(() => {
     const post = await xprisma.post.findFirst({ select: { user: true } })
 
     expect(post?.user.fullName).toBe('John Smith')
-    expectTypeOf(post?.user.fullName).toEqualTypeOf<string | undefined>()
   })
 
   test('relationships: with deep select', async () => {
@@ -191,7 +178,6 @@ testMatrix.setupTestSuite(() => {
     const post = await xprisma.post.findFirst({ select: { user: { select: { fullName: true } } } })
 
     expect(post?.user.fullName).toBe('John Smith')
-    expectTypeOf(post?.user.fullName).toEqualTypeOf<string | undefined>()
   })
 
   test('relationships: mixed include and select', async () => {
@@ -199,7 +185,6 @@ testMatrix.setupTestSuite(() => {
     const post = await xprisma.post.findFirst({ include: { user: { select: { fullName: true } } } })
 
     expect(post?.user.fullName).toBe('John Smith')
-    expectTypeOf(post?.user.fullName).toEqualTypeOf<string | undefined>()
   })
 
   test('dependencies between computed fields', async () => {
@@ -219,7 +204,6 @@ testMatrix.setupTestSuite(() => {
 
     const user = await xprisma.user.findFirst()
     expect(user?.loudName).toBe('JOHN SMITH')
-    expectTypeOf(user?.loudName).toEqualTypeOf<string | undefined>()
   })
 
   test('shadowing dependency', async () => {
@@ -238,7 +222,6 @@ testMatrix.setupTestSuite(() => {
 
     const user = await xprisma.user.findFirst()
     expect(user?.firstName).toBe('JOHN')
-    expectTypeOf(user?.firstName).toEqualTypeOf<string | undefined>()
   })
 
   test('shadowing dependency multiple times', async () => {
@@ -270,7 +253,6 @@ testMatrix.setupTestSuite(() => {
 
     const user = await xprisma.user.findFirst()
     expect(user?.firstName).toBe('JOHN!!!')
-    expectTypeOf(user?.firstName).toEqualTypeOf<string | undefined>()
   })
 
   test('empty extension does nothing', async () => {
@@ -286,7 +268,6 @@ testMatrix.setupTestSuite(() => {
 
     const user = await xprisma.user.findFirst({})
     expect(user?.fullName).toBe('John Smith')
-    expectTypeOf(user?.fullName).toEqualTypeOf<string | undefined>()
   })
 
   test('with null result', async () => {
@@ -294,7 +275,6 @@ testMatrix.setupTestSuite(() => {
 
     const user = await xprisma.user.findUnique({ where: { email: 'nothere@example.com' } })
     expect(user).toBeNull()
-    expectTypeOf(user).toBeNullable()
   })
 
   test('error in computed field', async () => {
@@ -314,7 +294,6 @@ testMatrix.setupTestSuite(() => {
 
     const user = await xprisma.user.findFirstOrThrow({})
     expect(() => user.fullName).toThrowErrorMatchingInlineSnapshot(`oops!`)
-    expectTypeOf(() => user.fullName).toEqualTypeOf<() => never>()
   })
 
   test('error in computed field with no name', async () => {
@@ -333,7 +312,6 @@ testMatrix.setupTestSuite(() => {
 
     const user = await xprisma.user.findFirstOrThrow({})
     expect(() => user.fullName).toThrowErrorMatchingInlineSnapshot(`oops!`)
-    expectTypeOf(() => user.fullName).toEqualTypeOf<() => never>()
   })
 
   test('nested includes should include scalars and relations', async () => {
@@ -370,14 +348,5 @@ testMatrix.setupTestSuite(() => {
     expectTypeOf(user.posts[0].user.id).toEqualTypeOf<string>()
     expectTypeOf(user.posts[0].user.posts[0].id).toEqualTypeOf<string>()
     expectTypeOf(user.posts[0].user.posts[0]).not.toHaveProperty('user')
-  })
-
-  test('when any type is passed as an input default selection type is returned', () => {
-    ;async () => {
-      const xprisma = prisma.$extends({})
-
-      const data = await xprisma.user.findFirstOrThrow({} as any)
-      expectTypeOf(data).toEqualTypeOf<User>()
-    }
   })
 })

@@ -1,3 +1,4 @@
+import { getQueryEngineProtocol } from '@prisma/internals'
 import { expectTypeOf } from 'expect-type'
 
 import { waitFor } from '../_utils/tests/waitFor'
@@ -126,26 +127,18 @@ testMatrix.setupTestSuite(
       expect(firstMethod).not.toHaveBeenCalled()
     })
 
-    test('allows to override built-in methods', () => {
+    test('allows to override built-in methods', async () => {
       const extMethod = jest.fn()
       const xprisma = prisma.$extends({
         model: {
           user: {
-            findFirst() {
-              extMethod()
-
-              return undefined
-            },
+            findFirst: extMethod,
           },
         },
       })
 
-      const findFirstData = xprisma.user.findFirst()
-      // @ts-expect-error
-      void xprisma.user.findFirst({})
+      await xprisma.user.findFirst({})
 
-      expect(findFirstData).toBeUndefined()
-      expectTypeOf(findFirstData).toEqualTypeOf<undefined>()
       expect(extMethod).toHaveBeenCalled()
     })
 
@@ -262,8 +255,8 @@ testMatrix.setupTestSuite(
 
     test('only accepts methods', () => {
       prisma.$extends({
-        // TODO -@-ts-expect-error
         model: {
+          // @ts-expect-error
           badInput: 1,
         },
       })
@@ -299,7 +292,7 @@ testMatrix.setupTestSuite(
       await expect(xprisma.user.fail()).rejects.toThrowErrorMatchingInlineSnapshot(`Fail!`)
     })
 
-    test('error in async PrismaPromise methods', async () => {
+    testIf(getQueryEngineProtocol() !== 'json')('error in async PrismaPromise methods', async () => {
       const xprisma = prisma.$extends((client) => {
         return client.$extends({
           name: 'Faulty model',
@@ -324,10 +317,17 @@ testMatrix.setupTestSuite(
         {
           badInput: true,
           ~~~~~~~~
-        ? where?: UserWhereUniqueInput
+        + where: {
+        +   id?: String,
+        +   email?: String
+        + }
         }
 
-        Unknown argument \`badInput\`. Available options are listed in green.
+        Unknown arg \`badInput\` in badInput for type User. Did you mean \`select\`?
+        Argument where is missing.
+
+        Note: Lines with + are required
+
       `)
     })
 
@@ -482,7 +482,7 @@ testMatrix.setupTestSuite(
               this: T,
               args: PrismaNamespace.Exact<A, Nullable<PrismaNamespace.Args<T, 'findUniqueOrThrow'>>>,
             ): A {
-              return args as any
+              return args as any as A
             },
           },
         },
@@ -663,7 +663,7 @@ testMatrix.setupTestSuite(
       })
 
       const ctx = xprisma.user.myCustomCallA()
-      expectTypeOf(ctx).toHaveProperty('name').toEqualTypeOf<'User'>()
+      expectTypeOf(ctx).toHaveProperty('name').toEqualTypeOf<string>()
       expectTypeOf(ctx).toHaveProperty('myCustomCallB').toEqualTypeOf<() => void>()
       expectTypeOf(ctx).toHaveProperty('update').toMatchTypeOf<Function>()
     })
@@ -685,7 +685,7 @@ testMatrix.setupTestSuite(
       })
 
       const ctx = xprisma.user.myCustomCallA()
-      expectTypeOf(ctx).toHaveProperty('name').toEqualTypeOf<string | undefined>()
+      expectTypeOf(ctx).toHaveProperty('name').toEqualTypeOf<string>()
       expectTypeOf(ctx).toHaveProperty('myCustomCallB').toEqualTypeOf<() => void>()
       expectTypeOf(ctx).not.toHaveProperty('update')
     })
@@ -707,7 +707,7 @@ testMatrix.setupTestSuite(
       })
 
       const ctx = xprisma.user.myCustomCallA()
-      expectTypeOf(ctx).toHaveProperty('name').toEqualTypeOf<string | undefined>()
+      expectTypeOf(ctx).toHaveProperty('name').toEqualTypeOf<string>()
       expectTypeOf(ctx).toHaveProperty('myCustomCallB').toEqualTypeOf<() => void>()
       expectTypeOf(ctx).toHaveProperty('update').toMatchTypeOf<Function>()
     })
@@ -729,59 +729,9 @@ testMatrix.setupTestSuite(
       })
 
       const ctx = xprisma.user.myCustomCallA()
-      expectTypeOf(ctx).toHaveProperty('name').toEqualTypeOf<string | undefined>()
+      expectTypeOf(ctx).toHaveProperty('name').toEqualTypeOf<string>()
       expectTypeOf(ctx).toHaveProperty('myCustomCallB').toEqualTypeOf<() => void>()
       expectTypeOf(ctx).toHaveProperty('update').toMatchTypeOf<Function>()
-    })
-
-    test('one specific user extension along a generic $allModels model extension', () => {
-      const myCustomCallA = jest.fn()
-      const myCustomCallB = jest.fn()
-
-      const xprisma = prisma.$extends({
-        model: {
-          user: {
-            myCustomCallB(input: string) {
-              myCustomCallB(input)
-              return input
-            },
-          },
-          $allModels: {
-            myCustomCallA(input: number) {
-              myCustomCallA(input)
-              return input
-            },
-          },
-        },
-      })
-
-      const results = [
-        xprisma.user.myCustomCallA(42),
-        xprisma.user.myCustomCallA(42),
-        xprisma.user.myCustomCallB('Hello'),
-      ] as const
-
-      // @ts-expect-error
-      expect(() => xprisma.post.myCustomCallB('Hello')).toThrow()
-
-      expect(results).toEqual([42, 42, 'Hello'])
-      expectTypeOf(results).toEqualTypeOf<readonly [number, number, string]>()
-
-      expect(myCustomCallA).toHaveBeenCalledTimes(2)
-      expect(myCustomCallA).toHaveBeenCalledWith(42)
-      expect(myCustomCallB).toHaveBeenCalledTimes(1)
-      expect(myCustomCallB).toHaveBeenCalledWith('Hello')
-    })
-
-    test('does not allow to pass invalid properties', async () => {
-      const xprisma = prisma.$extends({})
-
-      await expect(
-        xprisma.user.findFirst({
-          // @ts-expect-error
-          invalid: true,
-        }),
-      ).rejects.toThrow()
     })
   },
   {

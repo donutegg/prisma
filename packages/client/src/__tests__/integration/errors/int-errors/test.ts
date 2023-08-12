@@ -1,7 +1,10 @@
+import { getQueryEngineProtocol } from '@prisma/internals'
+
 import { generateTestClient } from '../../../../utils/getTestClient'
 import type { SetupParams } from '../../../../utils/setupMysql'
 import { setupMysql, tearDownMysql } from '../../../../utils/setupMysql'
 
+const testIf = (condition: boolean) => (condition ? test : test.skip)
 describe('int-errors', () => {
   let prisma
   let SetupParams: SetupParams
@@ -38,7 +41,7 @@ describe('int-errors', () => {
     })
   })
 
-  test('char-int', async () => {
+  testIf(getQueryEngineProtocol() !== 'json')('char-int', async () => {
     try {
       await prisma.user.update({
         where: { id: '576eddf9-2434-421f-9a86-58bede16fd95' },

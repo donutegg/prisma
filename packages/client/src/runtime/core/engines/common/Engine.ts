@@ -1,4 +1,4 @@
-import type { DataSource, GeneratorConfig } from '@prisma/generator-helper'
+import type { DataSource, DMMF, GeneratorConfig } from '@prisma/generator-helper'
 import { TracingHelper } from '@prisma/internals'
 
 import { Fetch } from '../data-proxy/utils/request'
@@ -39,6 +39,9 @@ export type GraphQLQuery = {
 }
 
 export type EngineProtocol = 'graphql' | 'json'
+export type EngineQuery = GraphQLQuery | JsonQuery
+
+export type EngineBatchQueries = GraphQLQuery[] | JsonQuery[]
 
 export type RequestOptions<InteractiveTransactionPayload> = {
   traceparent?: string
@@ -65,13 +68,14 @@ export abstract class Engine<InteractiveTransactionPayload = unknown> {
   abstract on(event: EngineEventType, listener: (args?: any) => any): void
   abstract start(): Promise<void>
   abstract stop(): Promise<void>
+  abstract getDmmf(): Promise<DMMF.Document>
   abstract version(forceRun?: boolean): Promise<string> | string
   abstract request<T>(
-    query: JsonQuery,
+    query: EngineQuery,
     options: RequestOptions<InteractiveTransactionPayload>,
   ): Promise<QueryEngineResult<T>>
   abstract requestBatch<T>(
-    queries: JsonQuery[],
+    queries: EngineBatchQueries,
     options: RequestBatchOptions<InteractiveTransactionPayload>,
   ): Promise<BatchQueryEngineResult<T>[]>
   abstract transaction(
@@ -121,6 +125,7 @@ export interface EngineConfig {
   engineEndpoint?: string
   activeProvider?: string
   logEmitter: EventEmitter
+  engineProtocol: EngineProtocol
 
   /**
    * The contents of the schema encoded into a string

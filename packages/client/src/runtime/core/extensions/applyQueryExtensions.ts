@@ -1,7 +1,6 @@
 import { Client, InternalRequestParams } from '../../getPrismaClient'
-import { RequestParams } from '../../RequestHandler'
 import { deepCloneArgs } from '../../utils/deepCloneArgs'
-import { BatchInternalParams, BatchQueryOptionsCb, CustomDataProxyFetch, QueryOptionsCb } from './$extends'
+import { QueryOptionsCb } from './$extends'
 
 function iterateAndCallQueryCallbacks(
   client: Client,
@@ -11,7 +10,7 @@ function iterateAndCallQueryCallbacks(
 ) {
   return client._createPrismaPromise((transaction) => {
     // we need to keep track of the previous customDataProxyFetch
-    const prevCustomFetch = params.customDataProxyFetch
+    const prevCustomFetch = params.customDataProxyFetch ?? ((f) => f)
 
     // allow query extensions to re-wrap in transactions
     // this will automatically discard the prev batch tx
@@ -37,8 +36,8 @@ function iterateAndCallQueryCallbacks(
       query: (args, __internalParams = params) => {
         // we need to keep track of the current customDataProxyFetch
         // this is to cascade customDataProxyFetch like a middleware
-        const currCustomFetch = __internalParams.customDataProxyFetch
-        __internalParams.customDataProxyFetch = composeCustomDataProxyFetch(prevCustomFetch, currCustomFetch)
+        const currCustomFetch = __internalParams.customDataProxyFetch ?? ((f) => f)
+        __internalParams.customDataProxyFetch = (f) => prevCustomFetch(currCustomFetch(f))
         __internalParams.args = args
 
         return iterateAndCallQueryCallbacks(client, __internalParams, queryCbs, i + 1)
@@ -60,57 +59,4 @@ export function applyQueryExtensions(client: Client, params: InternalRequestPara
   const cbs = client._extensions.getAllQueryCallbacks(jsModelName ?? '$none', operation)
 
   return iterateAndCallQueryCallbacks(client, params, cbs)
-}
-
-type BatchExecuteCallback = (params: BatchInternalParams) => Promise<unknown[]>
-
-export function createApplyBatchExtensionsFunction(executeBatch: BatchExecuteCallback) {
-  return (requests: RequestParams[]) => {
-    const params = { requests }
-    const callbacks = requests[0].extensions.getAllBatchQueryCallbacks()
-    if (!callbacks.length) {
-      return executeBatch(params)
-    }
-
-    return iterateAndCallBatchCallbacks(params, callbacks, 0, executeBatch)
-  }
-}
-
-export function iterateAndCallBatchCallbacks(
-  params: BatchInternalParams,
-  callbacks: BatchQueryOptionsCb[],
-  i: number,
-  executeBatch: BatchExecuteCallback,
-) {
-  if (i === callbacks.length) {
-    return executeBatch(params)
-  }
-
-  const prevFetch = params.customDataProxyFetch
-  const transaction = params.requests[0].transaction
-  return callbacks[i]({
-    args: {
-      queries: params.requests.map((request) => ({
-        model: request.modelName,
-        operation: request.action,
-        args: request.args,
-      })),
-      transaction: transaction
-        ? {
-            isolationLevel: transaction.kind === 'batch' ? transaction.isolationLevel : undefined,
-          }
-        : undefined,
-    },
-    __internalParams: params,
-    query(_args, __internalParams = params) {
-      const nextFetch = __internalParams.customDataProxyFetch
-      __internalParams.customDataProxyFetch = composeCustomDataProxyFetch(prevFetch, nextFetch)
-      return iterateAndCallBatchCallbacks(__internalParams, callbacks, i + 1, executeBatch)
-    },
-  })
-}
-
-const noopFetch: CustomDataProxyFetch = (f) => f
-function composeCustomDataProxyFetch(prevFetch = noopFetch, nextFetch = noopFetch): CustomDataProxyFetch {
-  return (f) => prevFetch(nextFetch(f))
 }

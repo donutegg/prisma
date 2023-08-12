@@ -14,7 +14,7 @@ module.exports = {
     'bin.ts',
     'setupMysql.ts',
     'setupPostgres.ts',
-    'test-SchemaEngineCommands.ts',
+    'test-MigrateEngineCommands.ts',
     'test-handlePanic.ts',
   ],
   // to get rid of "jest-haste-map: Haste module naming collision: package name"

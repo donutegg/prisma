@@ -636,7 +636,8 @@ testMatrix.setupTestSuite(({ provider }, _suiteMeta, clientMeta) => {
           // @ts-test-if: provider !== 'mongodb'
           await transactionPrisma.$queryRaw`SELECT id from "User" where email = 'x' FOR UPDATE`
 
-          const user = await transactionPrisma.user.findUniqueOrThrow({
+          const user = await transactionPrisma.user.findUnique({
+            rejectOnNotFound: true,
             where: {
               email: 'x',
             },
@@ -664,7 +665,8 @@ testMatrix.setupTestSuite(({ provider }, _suiteMeta, clientMeta) => {
 
     await Promise.allSettled(promises)
 
-    const finalUser = await prisma.user.findUniqueOrThrow({
+    const finalUser = await prisma.user.findUnique({
+      rejectOnNotFound: true,
       where: {
         email: 'x',
       },

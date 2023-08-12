@@ -1,15 +1,13 @@
 import { Client } from '../../getPrismaClient'
-import { RequestParams } from '../../RequestHandler'
-import type { Fetch, IsolationLevel } from '../engines'
 import {
   applyModelsAndClientExtensions,
   unApplyModelsAndClientExtensions,
 } from '../model/applyModelsAndClientExtensions'
 import { RawQueryArgs } from '../raw-query/RawQueryArgs'
 import { JsArgs } from '../types/JsApi'
-import { Optional } from '../types/Utils'
+import { OptionalFlat } from '../types/Utils'
 
-export type Args = Optional<RequiredArgs>
+export type Args = OptionalFlat<RequiredArgs>
 export type RequiredArgs = NameArgs & ResultArgs & ModelArgs & ClientArgs & QueryOptions
 
 type NameArgs = {
@@ -40,7 +38,7 @@ export type ModelArgs = {
 }
 
 export type ModelArg = {
-  [MethodName in string]: unknown
+  [MethodName in string]: Function
 }
 
 type ClientArgs = {
@@ -48,7 +46,7 @@ type ClientArgs = {
 }
 
 export type ClientArg = {
-  [MethodName in string]: unknown
+  [MethodName in string]: Function
 }
 
 type QueryOptionsCbArgs = {
@@ -65,34 +63,8 @@ type ModelQueryOptionsCbArgs = {
   query: (args: JsArgs) => Promise<unknown>
 }
 
-type BatchQuery = {
-  model: string | undefined
-  operation: string
-  args: JsArgs | RawQueryArgs
-}
-
-type BatchArgs = {
-  queries: BatchQuery[]
-  transaction?: { isolationLevel?: IsolationLevel }
-}
-
-export type BatchInternalParams = {
-  requests: RequestParams[]
-  customDataProxyFetch?: CustomDataProxyFetch
-}
-
-export type CustomDataProxyFetch = (fetch: Fetch) => Fetch
-
-type BatchQueryOptionsCbArgs = {
-  args: BatchArgs
-  // TODO: hide internalParams before making batch api public
-  query: (args: BatchArgs, __internalParams?: BatchInternalParams) => Promise<unknown[]>
-  __internalParams: BatchInternalParams
-}
-
 export type QueryOptionsCb = (args: QueryOptionsCbArgs) => Promise<any>
 export type ModelQueryOptionsCb = (args: ModelQueryOptionsCbArgs) => Promise<any>
-export type BatchQueryOptionsCb = (args: BatchQueryOptionsCbArgs) => Promise<any>
 
 type QueryOptions = {
   query: {
@@ -101,12 +73,6 @@ type QueryOptions = {
           [ModelAction in string]: ModelQueryOptionsCb
         }
       | QueryOptionsCb // for all queries (eg. raw queries)
-  }
-}
-
-export type QueryOptionsPrivate = QueryOptions & {
-  query?: {
-    $__internalBatch?: BatchQueryOptionsCb
   }
 }
 

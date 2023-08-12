@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import * as runtime from '@prisma/client/runtime/library'
+import * as runtime from '@prisma/client/runtime'
 
 /**
  * ##  Prisma Client ʲˢ
@@ -42,7 +42,7 @@ export declare class PrismaClientExtends<
     M extends runtime.Types.Extensions.UserArgs['model'] = {},
     Q extends runtime.Types.Extensions.UserArgs['query'] = {},
     C extends runtime.Types.Extensions.UserArgs['client'] = {},
-    Args extends runtime.Types.Extensions.Args = runtime.Types.Extensions.InternalArgs<R, M, {}, C>,
+    Args extends runtime.Types.Extensions.Args = runtime.Types.Extensions.InternalArgs<R, M, Q, C>,
   >(
     args:
       | ((client: PrismaClientExtends<ExtArgs>) => { $extends: { extArgs: Args } })
@@ -51,10 +51,12 @@ export declare class PrismaClientExtends<
       | { model?: M & runtime.Types.Extensions.UserArgs['model'] }
       | { query?: Q & runtime.Types.Extensions.UserArgs['query'] }
       | { client?: C & runtime.Types.Extensions.UserArgs['client'] },
-  ) => PrismaClientExtends<Args & ExtArgs> & Args['client'])
+  ) => runtime.Types.Extensions.GetClient<PrismaClientExtends<Args & ExtArgs>, Args['client']>)
 
   $transaction<R>(
-    fn: (prisma: Omit<this, runtime.ITXClientDenyList>) => Promise<R>,
+    fn: (
+      prisma: Omit<runtime.Types.Extensions.GetClient<this, ExtArgs['client']>, runtime.ITXClientDenyList>,
+    ) => Promise<R>,
     options?: { maxWait?: number; timeout?: number; isolationLevel?: string },
   ): Promise<R>
   $transaction<P extends Prisma.PrismaPromise<any>[]>(
@@ -84,7 +86,7 @@ export namespace Prisma {
     M extends runtime.Types.Extensions.UserArgs['model'] = {},
     Q extends runtime.Types.Extensions.UserArgs['query'] = {},
     C extends runtime.Types.Extensions.UserArgs['client'] = {},
-    Args extends runtime.Types.Extensions.Args = runtime.Types.Extensions.InternalArgs<R, M, {}, C>,
+    Args extends runtime.Types.Extensions.Args = runtime.Types.Extensions.InternalArgs<R, M, Q, C>,
   >(
     args:
       | ((client: PrismaClientExtends) => { $extends: { extArgs: Args } })

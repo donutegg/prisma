@@ -197,7 +197,8 @@ function queryGenericExtensionObjectViaDefault() {
       $allModels: {
         // eslint-disable-next-line @typescript-eslint/require-await
         async findFirst({ args, operation, query, model }) {
-          expectTypeOf(args).toMatchTypeOf<unknown>()
+          expectTypeOf(args).toMatchTypeOf<object>()
+          expectTypeOf(args['select']).toMatchTypeOf<object | undefined>()
           expectTypeOf(operation).toEqualTypeOf<string>()
           expectTypeOf(query).toMatchTypeOf<Function>()
           expectTypeOf(model).toEqualTypeOf<string>()
@@ -536,10 +537,13 @@ testMatrix.setupTestSuite(() => {
     const xprisma = prisma.$extends(clientGenericExtensionObjectViaDefault())
     expectTypeOf(xprisma).toHaveProperty('myGenericMethodViaDefault')
 
+    // @ts-test-if: provider !== 'mongodb'
     const data = xprisma.myGenericMethodViaDefault`SELECT * FROM User WHERE id = ${1}`
 
     expectTypeOf<(typeof data)['args']>().toEqualTypeOf<[TemplateStringsArray, number]>()
-    expectTypeOf<(typeof data)['payload']>().toEqualTypeOf<unknown>()
+    // @ts-test-if: provider !== 'mongodb'
+    expectTypeOf<(typeof data)['payload']>().toEqualTypeOf<any>()
+    // @ts-test-if: provider !== 'mongodb'
     expectTypeOf<(typeof data)['result']>().toEqualTypeOf<number>()
   })
 
@@ -633,6 +637,7 @@ testMatrix.setupTestSuite(() => {
       // @ts-test-if: provider === 'mongodb'
       expectTypeOf<typeof _aggregateRaw>().toEqualTypeOf<typeof aggregateRaw>()
 
+      // @ts-test-if: provider === 'mongodb'
       const _runCommandRaw = xprisma._$runCommandRaw({})
       // @ts-test-if: provider === 'mongodb'
       const runCommandRaw = await prisma.$runCommandRaw({})

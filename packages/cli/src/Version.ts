@@ -77,8 +77,8 @@ export class Version implements Command {
             currEngineInfo,
           ]
         })
-        .with({ 'schema-engine': P.select() }, (currEngineInfo) => {
-          return ['Schema Engine', currEngineInfo]
+        .with({ 'migration-engine': P.select() }, (currEngineInfo) => {
+          return ['Migration Engine', currEngineInfo]
         })
         .exhaustive()
     })
@@ -91,7 +91,7 @@ export class Version implements Command {
       ['Current platform', platform],
 
       ...enginesRows,
-      ['Schema Wasm', `@prisma/prisma-schema-wasm ${wasm.prismaSchemaWasmVersion}`],
+      ['Format Wasm', `@prisma/prisma-fmt-wasm ${wasm.prismaFmtVersion}`],
 
       ['Default Engines Hash', enginesVersion],
       ['Studio', packageJson.devDependencies['@prisma/studio-server']],

@@ -16,7 +16,7 @@ async function main() {
   const engineCachePaths = {
     [BinaryType.QueryEngineBinary]: path.join(cacheDir, BinaryType.QueryEngineBinary),
     [BinaryType.QueryEngineLibrary]: path.join(cacheDir, BinaryType.QueryEngineLibrary),
-    [BinaryType.SchemaEngineBinary]: path.join(cacheDir, BinaryType.SchemaEngineBinary),
+    [BinaryType.MigrationEngineBinary]: path.join(cacheDir, BinaryType.MigrationEngineBinary),
   }
 
   if (branch !== undefined) {
@@ -62,7 +62,7 @@ async function main() {
     const engineOutputPaths = {
       [BinaryType.QueryEngineLibrary]: path.join(folder, 'libquery_engine'.concat(libExt)),
       [BinaryType.QueryEngineBinary]: path.join(folder, BinaryType.QueryEngineBinary.concat(binExt)),
-      [BinaryType.SchemaEngineBinary]: path.join(folder, BinaryType.SchemaEngineBinary.concat(binExt)),
+      [BinaryType.MigrationEngineBinary]: path.join(folder, BinaryType.MigrationEngineBinary.concat(binExt)),
     }
 
     for (const [binaryType, outputPath] of Object.entries(engineOutputPaths)) {

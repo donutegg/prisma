@@ -7,8 +7,6 @@ export class PrismaClientInitializationError extends Error {
 
   constructor(message: string, clientVersion: string, errorCode?: string) {
     super(message)
-    this.name = 'PrismaClientInitializationError'
-
     this.clientVersion = clientVersion
     this.errorCode = errorCode
     Error.captureStackTrace(PrismaClientInitializationError)

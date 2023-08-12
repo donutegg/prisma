@@ -12,7 +12,9 @@ import {
 import { bold, dim, green, red } from 'kleur/colors'
 
 import { Migrate } from '../Migrate'
+import { throwUpgradeErrorIfOldMigrate } from '../utils/detectOldMigrate'
 import { ensureCanConnectToDatabase, getDatasourceInfo } from '../utils/ensureDatabaseExists'
+import { EarlyAccessFeatureFlagWithMigrateError, ExperimentalFlagWithMigrateError } from '../utils/flagErrors'
 import { getSchemaPathAndPrint } from '../utils/getSchemaPathAndPrint'
 import { printDatasource } from '../utils/printDatasource'
 
@@ -62,6 +64,8 @@ ${bold('Examples')}
         '-h': '--help',
         '--applied': String,
         '--rolled-back': String,
+        '--experimental': Boolean,
+        '--early-access-feature': Boolean,
         '--schema': String,
         '--telemetry-information': String,
       },
@@ -78,11 +82,21 @@ ${bold('Examples')}
       return this.help()
     }
 
+    if (args['--experimental']) {
+      throw new ExperimentalFlagWithMigrateError()
+    }
+
+    if (args['--early-access-feature']) {
+      throw new EarlyAccessFeatureFlagWithMigrateError()
+    }
+
     loadEnvFile(args['--schema'], true)
 
     const schemaPath = await getSchemaPathAndPrint(args['--schema'])
 
     printDatasource({ datasourceInfo: await getDatasourceInfo({ schemaPath }) })
+
+    throwUpgradeErrorIfOldMigrate(schemaPath)
 
     // if both are not defined
     if (!args['--applied'] && !args['--rolled-back']) {

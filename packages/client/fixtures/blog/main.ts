@@ -1,6 +1,8 @@
 import { PrismaClient } from './@prisma/client'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  rejectOnNotFound: {},
+})
 
 async function main() {
   const aggregate = await prisma.user.aggregate({

@@ -22,6 +22,7 @@ import {
   PrismaClientInitializationError,
   PrismaClientValidationError,
   NotFoundError,
+  decompressFromBase64,
   getPrismaClient,
   sqltag,
   empty,
@@ -32,16 +33,14 @@ import {
   objectEnumValues,
   makeStrictEnum,
   Extensions,
-  defineDmmfProperty,
-  Public,
+  defineDmmfProperty
 } from '${runtimeDir}/edge-esm.js'`
     : browser
     ? `
 const {
   Decimal,
   objectEnumValues,
-  makeStrictEnum,
-  Public,
+  makeStrictEnum
 } = require('${runtimeDir}/${runtimeName}')
 `
     : `
@@ -52,6 +51,7 @@ const {
   PrismaClientInitializationError,
   PrismaClientValidationError,
   NotFoundError,
+  decompressFromBase64,
   getPrismaClient,
   sqltag,
   empty,
@@ -64,7 +64,6 @@ const {
   Extensions,
   warnOnce,
   defineDmmfProperty,
-  Public,
 } = require('${runtimeDir}/${runtimeName}')
 `
 }
@@ -97,7 +96,7 @@ Prisma.sql = ${notSupportOnBrowser('sqltag', browser)}
 Prisma.empty = ${notSupportOnBrowser('empty', browser)}
 Prisma.join = ${notSupportOnBrowser('join', browser)}
 Prisma.raw = ${notSupportOnBrowser('raw', browser)}
-Prisma.validator = Public.validator
+Prisma.validator = () => (val) => val
 
 /**
 * Extensions
@@ -140,11 +139,6 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
   ts: () => `export import DMMF = runtime.DMMF
 
 export type PrismaPromise<T> = $Public.PrismaPromise<T>
-
-/**
- * Validator
- */
-export import validator = runtime.Public.validator
 
 /**
  * Prisma Errors
@@ -530,7 +524,7 @@ type Cast<A, B> = A extends B ? A : B;
 
 export const type: unique symbol;
 
-
+export function validator<V>(): <S>(select: $Utils.LegacyExact<S, V>) => S;
 
 /**
  * Used by group by
@@ -571,9 +565,9 @@ type TupleToUnion<K extends readonly any[]> = _TupleToUnion<K>
 type MaybeTupleToUnion<T> = T extends any[] ? TupleToUnion<T> : T
 
 /**
- * Like \`Pick\`, but additionally can also accept an array of keys
+ * Like \`Pick\`, but with an array
  */
-type PickEnumerable<T, K extends Enumerable<keyof T> | keyof T> = Prisma__Pick<T, MaybeTupleToUnion<K>>
+type PickArray<T, K extends Array<keyof T>> = Prisma__Pick<T, TupleToUnion<K>>
 
 /**
  * Exclude all keys with underscores

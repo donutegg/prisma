@@ -8,10 +8,11 @@ import {
   HelpError,
   isError,
   loadEnvFile,
+  logger,
 } from '@prisma/internals'
 import fs from 'fs'
 import getStdin from 'get-stdin'
-import { bold, dim, green, italic } from 'kleur/colors'
+import { bold, dim, green, italic, red } from 'kleur/colors'
 import path from 'path'
 
 import { Migrate } from '../Migrate'
@@ -89,6 +90,7 @@ ${bold('Examples')}
         '--file': String,
         '--schema': String,
         '--url': String,
+        '--preview-feature': Boolean,
         '--telemetry-information': String,
       },
       false,
@@ -102,6 +104,11 @@ ${bold('Examples')}
 
     if (args['--help']) {
       return this.help()
+    }
+
+    if (args['--preview-feature']) {
+      logger.warn(`"prisma db execute" was in Preview and is now Generally Available.
+You can now remove the ${red('--preview-feature')} flag.`)
     }
 
     loadEnvFile(args['--schema'], false)

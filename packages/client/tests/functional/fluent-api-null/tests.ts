@@ -10,491 +10,232 @@ declare let prisma: PrismaClient
 const nonExistingId = randomBytes(12).toString('hex')
 
 testMatrix.setupTestSuite(() => {
-  describe('regular client', () => {
-    test('findFirst', async () => {
-      const result = await prisma.resource.findFirst().children()
+  test('findFirst', async () => {
+    const result = await prisma.resource.findFirst().children()
 
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
-    })
-
-    test('findUnique', async () => {
-      const result = await prisma.resource.findUnique({ where: { id: nonExistingId } }).children()
-
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
-    })
-
-    test('findFirstOrThrow', async () => {
-      const result = prisma.resource.findFirstOrThrow().children()
-
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('findUniqueOrThrow', async () => {
-      const result = prisma.resource.findUniqueOrThrow({ where: { id: nonExistingId } }).children()
-
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('create', async () => {
-      const result = await prisma.resource.create({ data: {} }).children()
-
-      await prisma.resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
-    })
-
-    test('update', async () => {
-      const result = prisma.resource.update({ where: { id: nonExistingId }, data: {} }).children()
-
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('upsert', async () => {
-      const result = await prisma.resource.upsert({ where: { id: nonExistingId }, update: {}, create: {} }).children()
-
-      await prisma.resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
-    })
-
-    test('findFirst with select', async () => {
-      const result = await prisma.resource.findFirst().children({
-        select: {
-          id: true,
-        },
-      })
-
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
-    })
-
-    test('findUnique with select', async () => {
-      const result = await prisma.resource.findUnique({ where: { id: nonExistingId } }).children({
-        select: {
-          id: true,
-        },
-      })
-
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
-    })
-
-    test('findFirstOrThrow with select', async () => {
-      const result = prisma.resource.findFirstOrThrow().children({
-        select: {
-          id: true,
-        },
-      })
-
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('findUniqueOrThrow with select', async () => {
-      const result = prisma.resource.findUniqueOrThrow({ where: { id: nonExistingId } }).children({
-        select: {
-          id: true,
-        },
-      })
-
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('create with select', async () => {
-      const result = await prisma.resource.create({ data: {} }).children({
-        select: {
-          id: true,
-        },
-      })
-
-      await prisma.resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
-    })
-
-    test('update with select', async () => {
-      const result = prisma.resource.update({ where: { id: nonExistingId }, data: {} }).children({
-        select: {
-          id: true,
-        },
-      })
-
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('upsert with select', async () => {
-      const result = await prisma.resource.upsert({ where: { id: nonExistingId }, update: {}, create: {} }).children({
-        select: {
-          id: true,
-        },
-      })
-
-      await prisma.resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
-    })
-
-    test('findFirst with include', async () => {
-      const result = await prisma.resource.findFirst().children({
-        include: {
-          parent: true,
-        },
-      })
-
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
-    })
-
-    test('findUnique with include', async () => {
-      const result = await prisma.resource.findUnique({ where: { id: nonExistingId } }).children({
-        include: {
-          parent: true,
-        },
-      })
-
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
-    })
-
-    test('findFirstOrThrow with include', async () => {
-      const result = prisma.resource.findFirstOrThrow().children({
-        include: {
-          parent: true,
-        },
-      })
-
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('findUniqueOrThrow with include', async () => {
-      const result = prisma.resource.findUniqueOrThrow({ where: { id: nonExistingId } }).children({
-        include: {
-          parent: true,
-        },
-      })
-
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('create with include', async () => {
-      const result = await prisma.resource.create({ data: {} }).children({
-        include: {
-          parent: true,
-        },
-      })
-
-      await prisma.resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
-    })
-
-    test('update with include', async () => {
-      const result = prisma.resource.update({ where: { id: nonExistingId }, data: {} }).children({
-        include: {
-          parent: true,
-        },
-      })
-
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('upsert with include', async () => {
-      const result = await prisma.resource.upsert({ where: { id: nonExistingId }, update: {}, create: {} }).children({
-        include: {
-          parent: true,
-        },
-      })
-
-      await prisma.resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
-    })
+    expect(result).toBeNull()
+    expectTypeOf(result).toBeNullable()
   })
 
-  describe('extended client', () => {
-    test('findFirst', async () => {
-      const result = await prisma.$extends({}).resource.findFirst().children()
+  test('findUnique', async () => {
+    const result = await prisma.resource.findUnique({ where: { id: nonExistingId } }).children()
 
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
+    expect(result).toBeNull()
+    expectTypeOf(result).toBeNullable()
+  })
+
+  test('findFirstOrThrow', async () => {
+    const result = prisma.resource.findFirstOrThrow().children()
+
+    await expect(result).rejects.toThrow()
+    expectTypeOf(result).resolves.not.toBeNullable()
+  })
+
+  test('findUniqueOrThrow', async () => {
+    const result = prisma.resource.findUniqueOrThrow({ where: { id: nonExistingId } }).children()
+
+    await expect(result).rejects.toThrow()
+    expectTypeOf(result).resolves.not.toBeNullable()
+  })
+
+  test('create', async () => {
+    const result = await prisma.resource.create({ data: {} }).children()
+
+    await prisma.resource.deleteMany()
+
+    expect(result).toStrictEqual([])
+    expectTypeOf(result).not.toBeNullable()
+  })
+
+  test('update', async () => {
+    const result = prisma.resource.update({ where: { id: nonExistingId }, data: {} }).children()
+
+    await expect(result).rejects.toThrow()
+    expectTypeOf(result).resolves.not.toBeNullable()
+  })
+
+  test('upsert', async () => {
+    const result = await prisma.resource.upsert({ where: { id: nonExistingId }, update: {}, create: {} }).children()
+
+    await prisma.resource.deleteMany()
+
+    expect(result).toStrictEqual([])
+    expectTypeOf(result).not.toBeNullable()
+  })
+
+  test('findFirst with select', async () => {
+    const result = await prisma.resource.findFirst().children({
+      select: {
+        id: true,
+      },
     })
 
-    test('findUnique', async () => {
-      const result = await prisma
-        .$extends({})
-        .resource.findUnique({ where: { id: nonExistingId } })
-        .children()
+    expect(result).toBeNull()
+    expectTypeOf(result).toBeNullable()
+  })
 
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
+  test('findUnique with select', async () => {
+    const result = await prisma.resource.findUnique({ where: { id: nonExistingId } }).children({
+      select: {
+        id: true,
+      },
     })
 
-    test('findFirstOrThrow', async () => {
-      const result = prisma.$extends({}).resource.findFirstOrThrow().children()
+    expect(result).toBeNull()
+    expectTypeOf(result).toBeNullable()
+  })
 
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
+  test('findFirstOrThrow with select', async () => {
+    const result = prisma.resource.findFirstOrThrow().children({
+      select: {
+        id: true,
+      },
     })
 
-    test('findUniqueOrThrow', async () => {
-      const result = prisma
-        .$extends({})
-        .resource.findUniqueOrThrow({ where: { id: nonExistingId } })
-        .children()
+    await expect(result).rejects.toThrow()
+    expectTypeOf(result).resolves.not.toBeNullable()
+  })
 
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
+  test('findUniqueOrThrow with select', async () => {
+    const result = prisma.resource.findUniqueOrThrow({ where: { id: nonExistingId } }).children({
+      select: {
+        id: true,
+      },
     })
 
-    test('create', async () => {
-      const result = await prisma.$extends({}).resource.create({ data: {} }).children()
+    await expect(result).rejects.toThrow()
+    expectTypeOf(result).resolves.not.toBeNullable()
+  })
 
-      await prisma.$extends({}).resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
+  test('create with select', async () => {
+    const result = await prisma.resource.create({ data: {} }).children({
+      select: {
+        id: true,
+      },
     })
 
-    test('update', async () => {
-      const result = prisma
-        .$extends({})
-        .resource.update({ where: { id: nonExistingId }, data: {} })
-        .children()
+    await prisma.resource.deleteMany()
 
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
+    expect(result).toStrictEqual([])
+    expectTypeOf(result).not.toBeNullable()
+  })
+
+  test('update with select', async () => {
+    const result = prisma.resource.update({ where: { id: nonExistingId }, data: {} }).children({
+      select: {
+        id: true,
+      },
     })
 
-    test('upsert', async () => {
-      const result = await prisma
-        .$extends({})
-        .resource.upsert({ where: { id: nonExistingId }, update: {}, create: {} })
-        .children()
+    await expect(result).rejects.toThrow()
+    expectTypeOf(result).resolves.not.toBeNullable()
+  })
 
-      await prisma.$extends({}).resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
+  test('upsert with select', async () => {
+    const result = await prisma.resource.upsert({ where: { id: nonExistingId }, update: {}, create: {} }).children({
+      select: {
+        id: true,
+      },
     })
 
-    test('findFirst with select', async () => {
-      const result = await prisma
-        .$extends({})
-        .resource.findFirst()
-        .children({
-          select: {
-            id: true,
-          },
-        })
+    await prisma.resource.deleteMany()
 
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
+    expect(result).toStrictEqual([])
+    expectTypeOf(result).not.toBeNullable()
+  })
+
+  test('findFirst with include', async () => {
+    const result = await prisma.resource.findFirst().children({
+      include: {
+        parent: true,
+      },
     })
 
-    test('findUnique with select', async () => {
-      const result = await prisma
-        .$extends({})
-        .resource.findUnique({ where: { id: nonExistingId } })
-        .children({
-          select: {
-            id: true,
-          },
-        })
+    expect(result).toBeNull()
+    expectTypeOf(result).toBeNullable()
+  })
 
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
+  test('findUnique with include', async () => {
+    const result = await prisma.resource.findUnique({ where: { id: nonExistingId } }).children({
+      include: {
+        parent: true,
+      },
     })
 
-    test('findFirstOrThrow with select', async () => {
-      const result = prisma
-        .$extends({})
-        .resource.findFirstOrThrow()
-        .children({
-          select: {
-            id: true,
-          },
-        })
+    expect(result).toBeNull()
+    expectTypeOf(result).toBeNullable()
+  })
 
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
+  test('findFirstOrThrow with include', async () => {
+    const result = prisma.resource.findFirstOrThrow().children({
+      include: {
+        parent: true,
+      },
     })
 
-    test('findUniqueOrThrow with select', async () => {
-      const result = prisma
-        .$extends({})
-        .resource.findUniqueOrThrow({ where: { id: nonExistingId } })
-        .children({
-          select: {
-            id: true,
-          },
-        })
+    await expect(result).rejects.toThrow()
+    expectTypeOf(result).resolves.not.toBeNullable()
+  })
 
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
+  test('findUniqueOrThrow with include', async () => {
+    const result = prisma.resource.findUniqueOrThrow({ where: { id: nonExistingId } }).children({
+      include: {
+        parent: true,
+      },
     })
 
-    test('create with select', async () => {
-      const result = await prisma
-        .$extends({})
-        .resource.create({ data: {} })
-        .children({
-          select: {
-            id: true,
-          },
-        })
+    await expect(result).rejects.toThrow()
+    expectTypeOf(result).resolves.not.toBeNullable()
+  })
 
-      await prisma.$extends({}).resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
+  test('create with include', async () => {
+    const result = await prisma.resource.create({ data: {} }).children({
+      include: {
+        parent: true,
+      },
     })
 
-    test('update with select', async () => {
-      const result = prisma
-        .$extends({})
-        .resource.update({ where: { id: nonExistingId }, data: {} })
-        .children({
-          select: {
-            id: true,
-          },
-        })
+    await prisma.resource.deleteMany()
 
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
+    expect(result).toStrictEqual([])
+    expectTypeOf(result).not.toBeNullable()
+  })
+
+  test('update with include', async () => {
+    const result = prisma.resource.update({ where: { id: nonExistingId }, data: {} }).children({
+      include: {
+        parent: true,
+      },
     })
 
-    test('upsert with select', async () => {
-      const result = await prisma
-        .$extends({})
-        .resource.upsert({ where: { id: nonExistingId }, update: {}, create: {} })
-        .children({
-          select: {
-            id: true,
-          },
-        })
+    await expect(result).rejects.toThrow()
+    expectTypeOf(result).resolves.not.toBeNullable()
+  })
 
-      await prisma.$extends({}).resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
+  test('upsert with include', async () => {
+    const result = await prisma.resource.upsert({ where: { id: nonExistingId }, update: {}, create: {} }).children({
+      include: {
+        parent: true,
+      },
     })
 
-    test('findFirst with include', async () => {
-      const result = await prisma
-        .$extends({})
-        .resource.findFirst()
-        .children({
-          include: {
-            parent: true,
-          },
-        })
+    await prisma.resource.deleteMany()
 
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
-    })
+    expect(result).toStrictEqual([])
+    expectTypeOf(result).not.toBeNullable()
+  })
 
-    test('findUnique with include', async () => {
-      const result = await prisma
-        .$extends({})
-        .resource.findUnique({ where: { id: nonExistingId } })
-        .children({
-          include: {
-            parent: true,
-          },
-        })
+  test('findFirst with rejectOnNotFound', async () => {
+    const result = prisma.resource.findFirst({ rejectOnNotFound: true }).children()
 
-      expect(result).toBeNull()
-      expectTypeOf(result).toBeNullable()
-    })
+    await expect(result).rejects.toThrow()
+    expectTypeOf(result).resolves.not.toBeNullable()
+  })
 
-    test('findFirstOrThrow with include', async () => {
-      const result = prisma
-        .$extends({})
-        .resource.findFirstOrThrow()
-        .children({
-          include: {
-            parent: true,
-          },
-        })
+  test('findUnique with rejectOnNotFound', async () => {
+    const result = prisma.resource.findUnique({ where: { id: nonExistingId }, rejectOnNotFound: true }).children()
 
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('findUniqueOrThrow with include', async () => {
-      const result = prisma
-        .$extends({})
-        .resource.findUniqueOrThrow({ where: { id: nonExistingId } })
-        .children({
-          include: {
-            parent: true,
-          },
-        })
-
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('create with include', async () => {
-      const result = await prisma
-        .$extends({})
-        .resource.create({ data: {} })
-        .children({
-          include: {
-            parent: true,
-          },
-        })
-
-      await prisma.$extends({}).resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
-    })
-
-    test('update with include', async () => {
-      const result = prisma
-        .$extends({})
-        .resource.update({ where: { id: nonExistingId }, data: {} })
-        .children({
-          include: {
-            parent: true,
-          },
-        })
-
-      await expect(result).rejects.toThrow()
-      expectTypeOf(result).resolves.not.toBeNullable()
-    })
-
-    test('upsert with include', async () => {
-      const result = await prisma
-        .$extends({})
-        .resource.upsert({ where: { id: nonExistingId }, update: {}, create: {} })
-        .children({
-          include: {
-            parent: true,
-          },
-        })
-
-      await prisma.$extends({}).resource.deleteMany()
-
-      expect(result).toStrictEqual([])
-      expectTypeOf(result).not.toBeNullable()
-    })
+    await expect(result).rejects.toThrow()
+    expectTypeOf(result).resolves.not.toBeNullable()
   })
 })

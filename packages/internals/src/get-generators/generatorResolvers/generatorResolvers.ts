@@ -1,3 +1,4 @@
+import { photonResolver } from './photonjs/photonResolver'
 import { prismaClientResolver } from './prisma-client-js/prismaClientResolver'
 
 export type GeneratorPaths = {
@@ -18,5 +19,6 @@ export type GeneratorResolvers = {
  * as written in the schema, as well as finding their output paths.
  */
 export const generatorResolvers: GeneratorResolvers = {
+  photonjs: photonResolver,
   'prisma-client-js': prismaClientResolver,
 }

@@ -48,7 +48,6 @@ ${bold('Options')}
 
     -h, --help   Display this help message
       --schema   Custom path to your Prisma schema
-  --accelerate   Enable Accelerate in the Prisma Client
   --data-proxy   Enable the Data Proxy in the Prisma Client
        --watch   Watch the Prisma schema and rerun after a change
    --generator   Generator to use (may be provided multiple times)
@@ -85,7 +84,14 @@ ${bold('Examples')}
       } catch (err) {
         this.hasGeneratorErrored = true
         generator.stop()
-        message.push(`${err.message}\n\n`)
+        // This is an error received when the client < 2.20 and the cli  >= 2.20, This was caused by a breaking change in the generators
+        if (err.message.includes('outputDir.endsWith is not a function')) {
+          message.push(
+            `This combination of Prisma CLI (>= 2.20) and Prisma Client (< 2.20) is not supported. Please update \`@prisma/client\` to ${pkg.version}   \n\n`,
+          )
+        } else {
+          message.push(`${err.message}\n\n`)
+        }
       }
     }
 
@@ -99,7 +105,6 @@ ${bold('Examples')}
       '--watch': Boolean,
       '--schema': String,
       '--data-proxy': Boolean,
-      '--accelerate': Boolean,
       '--generator': [String],
       // Only used for checkpoint information
       '--postinstall': String,
@@ -136,11 +141,7 @@ ${bold('Examples')}
         printDownloadProgress: !watchMode,
         version: enginesVersion,
         cliVersion: pkg.version,
-        dataProxy:
-          !!args['--data-proxy'] ||
-          !!args['--accelerate'] ||
-          !!process.env.PRISMA_GENERATE_DATAPROXY ||
-          !!process.env.PRISMA_GENERATE_ACCELERATE,
+        dataProxy: !!args['--data-proxy'] || !!process.env.PRISMA_GENERATE_DATAPROXY,
         generatorNames: args['--generator'],
         postinstall: Boolean(args['--postinstall']),
       })
@@ -259,9 +260,7 @@ ${highlightTS(`\
 import { PrismaClient } from '${importPath}/${isDeno ? 'deno/' : ''}edge${isDeno ? '.ts' : ''}'`)}
 ${dim('```')}
 
-You will need an Accelerate or a Prisma Data Proxy connection string. See documentation: ${link(
-                'https://pris.ly/d/data-proxy',
-              )}
+You will need a Prisma Data Proxy connection string. See documentation: ${link('https://pris.ly/d/data-proxy')}
 `
             : ''
         }${breakingChangesStr}${versionsWarning}`
@@ -292,11 +291,7 @@ Please run \`${getCommandWithExecutor('prisma generate')}\` to see the errors.`)
               printDownloadProgress: !watchMode,
               version: enginesVersion,
               cliVersion: pkg.version,
-              dataProxy:
-                !!args['--data-proxy'] ||
-                !!args['--accelerate'] ||
-                !!process.env.PRISMA_GENERATE_DATAPROXY ||
-                !!process.env.PRISMA_GENERATE_ACCELERATE,
+              dataProxy: !!args['--data-proxy'] || !!process.env.PRISMA_GENERATE_DATAPROXY,
               generatorNames: args['--generator'],
             })
 

@@ -2,19 +2,14 @@ import { expectTypeOf } from 'expect-type'
 
 import testMatrix from './_matrix'
 // @ts-ignore
-import { Prisma as PrismaNamespace, PrismaClient } from './node_modules/@prisma/client'
-
-declare let prisma: PrismaClient
+import { Prisma as PrismaNamespace } from './node_modules/@prisma/client'
 
 testMatrix.setupTestSuite(
   () => {
     test('empty', () => {
       expectTypeOf<
-        PrismaNamespace.TypeMap['model']['user']['operations']['groupBy']['args']
-      >().toEqualTypeOf<PrismaNamespace.userGroupByArgs>()
-      ;async () => {
-        await prisma.$extends({}).user.findFirst()
-      }
+        PrismaNamespace.TypeMap['model']['user']['groupBy']['args']
+      >().toEqualTypeOf<PrismaNamespace.UserGroupByArgs>()
     })
   },
   {
