@@ -9,10 +9,10 @@ declare let prisma: PrismaClient
 testMatrix.setupTestSuite(
   () => {
     const email = faker.internet.email()
-    const title = faker.person.jobTitle()
+    const title = faker.name.jobTitle()
 
     const newEmail = faker.internet.email()
-    const newTitle = faker.person.jobTitle()
+    const newTitle = faker.name.jobTitle()
 
     describe('multischema', () => {
       test('create', async () => {

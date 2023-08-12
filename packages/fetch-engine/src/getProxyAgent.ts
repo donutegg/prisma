@@ -1,7 +1,7 @@
 'use strict'
 
-import { HttpProxyAgent, HttpProxyAgentOptions } from 'http-proxy-agent'
-import { HttpsProxyAgent, HttpsProxyAgentOptions } from 'https-proxy-agent'
+import HttpProxyAgent from 'http-proxy-agent'
+import HttpsProxyAgent from 'https-proxy-agent'
 import Url from 'url'
 
 // code from https://raw.githubusercontent.com/request/request/5ba8eb44da7cd639ca21070ea9be20d611b85f66/lib/getProxyFromURI.js
@@ -81,7 +81,9 @@ function getProxyFromURI(uri): string | null {
   return null
 }
 
-export function getProxyAgent(url: string): HttpProxyAgentOptions<string> | HttpsProxyAgentOptions<string> | undefined {
+export function getProxyAgent(
+  url: string,
+): HttpProxyAgent.HttpProxyAgent | HttpsProxyAgent.HttpsProxyAgent | undefined {
   const uri = Url.parse(url)
   const proxy = getProxyFromURI(uri)
   if (!proxy) {
@@ -89,11 +91,11 @@ export function getProxyAgent(url: string): HttpProxyAgentOptions<string> | Http
   }
 
   if (uri.protocol === 'http:') {
-    return new HttpProxyAgent(proxy)
+    return HttpProxyAgent(proxy)
   }
 
   if (uri.protocol === 'https:') {
-    return new HttpsProxyAgent(proxy)
+    return HttpsProxyAgent(proxy)
   }
 
   return undefined

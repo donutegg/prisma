@@ -10,6 +10,8 @@ import { TAB_SIZE } from './constants'
 import type { Generatable } from './Generatable'
 import { TS } from './Generatable'
 import { OutputType } from './Output'
+import { PayloadType } from './Payload'
+import { ifExtensions } from './utils/ifExtensions'
 
 export class Count implements Generatable {
   constructor(
@@ -51,7 +53,10 @@ export class Count implements Generatable {
 
 ${outputType.toTS()}
 
-export type ${getSelectName(name)}<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+export type ${getSelectName(name)}${ifExtensions(
+      '<ExtArgs extends runtime.Types.Extensions.Args = runtime.Types.Extensions.DefaultArgs>',
+      '',
+    )} = {
 ${indent(
   type.fields
     .map((field) => {
@@ -73,6 +78,10 @@ ${indent(
   TAB_SIZE,
 )}
 }
+
+${ifExtensions('', new PayloadType(outputType, this.dmmf, false).toTS())}
+
+
 
 // Custom InputTypes
 ${this.argsTypes.map((gen) => TS(gen)).join('\n')}

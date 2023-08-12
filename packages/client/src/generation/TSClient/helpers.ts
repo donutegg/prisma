@@ -5,6 +5,7 @@ import { capitalize, lowerCase } from '../../runtime/utils/common'
 import { getAggregateArgsName, getModelArgName } from '../utils'
 import type { JSDocMethodBodyCtx } from './jsdoc'
 import { JSDocs } from './jsdoc'
+import { ifExtensions } from './utils/ifExtensions'
 
 export function getMethodJSDocBody(action: DMMF.ModelAction, mapping: DMMF.ModelMapping, model: DMMF.Model): string {
   const ctx: JSDocMethodBodyCtx = {
@@ -35,17 +36,17 @@ export function getGenericMethod(name: string, actionName: DMMF.ModelAction) {
     return ''
   }
   if (actionName === 'findFirst' || actionName === 'findUnique') {
-    return `<T extends ${getModelArgName(
-      name,
-      actionName,
-    )}<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>`
+    return `<T extends ${getModelArgName(name, actionName)}${ifExtensions(
+      '<ExtArgs>',
+      '',
+    )},  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>`
   }
   const modelArgName = getModelArgName(name, actionName)
 
   if (!modelArgName) {
     console.log({ name, actionName })
   }
-  return `<T extends ${modelArgName}<ExtArgs>>`
+  return `<T extends ${modelArgName}${ifExtensions('<ExtArgs>', '')}>`
 }
 export function getArgs(modelName: string, actionName: DMMF.ModelAction) {
   if (actionName === 'count') {
@@ -66,7 +67,7 @@ export function getArgs(modelName: string, actionName: DMMF.ModelAction) {
     actionName === DMMF.ModelAction.findFirstOrThrow
       ? '?'
       : ''
-  }: SelectSubset<T, ${getModelArgName(modelName, actionName)}<ExtArgs>>`
+  }: SelectSubset<T, ${getModelArgName(modelName, actionName)}${ifExtensions('<ExtArgs>', '')}>`
 }
 export function wrapComment(str: string): string {
   return `/**\n${str

@@ -11,7 +11,7 @@ declare let prisma: import('@prisma/client').PrismaClient
 const describeIf = (condition: boolean) => (condition ? describe : describe.skip)
 
 // m:n relation (MongoDB database)
-async function createXPostsWith2CategoriesMongoDB({ count, postModel }: { count: number; postModel: string }) {
+async function createXPostsWith2CategoriesMongoDB({ count, postModel }) {
   const prismaPromises: any = []
 
   for (let i = 0; i < count; i++) {

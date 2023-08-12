@@ -5,8 +5,5 @@ export default defineMatrix(() => [
     {
       provider: 'sqlite',
     },
-    {
-      provider: 'mongodb',
-    },
   ],
 ])

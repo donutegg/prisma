@@ -9,14 +9,14 @@ declare let prisma: PrismaClient
 testMatrix.setupTestSuite(
   (suiteConfig) => {
     const fakeUser = {
-      id: suiteConfig.provider === 'mongodb' ? faker.database.mongodbObjectId() : faker.string.alphanumeric(5),
+      id: suiteConfig.provider === 'mongodb' ? faker.database.mongodbObjectId() : faker.random.alphaNumeric(5),
       email: faker.internet.email(),
-      name: faker.person.firstName(),
+      name: faker.name.firstName(),
     }
 
     const fakeProfile = {
-      id: suiteConfig.provider === 'mongodb' ? faker.database.mongodbObjectId() : faker.string.alphanumeric(5),
-      bio: faker.person.jobTitle(),
+      id: suiteConfig.provider === 'mongodb' ? faker.database.mongodbObjectId() : faker.random.alphaNumeric(5),
+      bio: faker.name.jobTitle(),
     }
 
     beforeAll(async () => {

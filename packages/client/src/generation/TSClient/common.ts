@@ -2,6 +2,7 @@ import indent from 'indent-string'
 
 import { TAB_SIZE } from './constants'
 import type { TSClientOptions } from './TSClient'
+import { ifExtensions } from './utils/ifExtensions'
 
 export const commonCodeJS = ({
   runtimeDir,
@@ -33,16 +34,14 @@ import {
   objectEnumValues,
   makeStrictEnum,
   Extensions,
-  defineDmmfProperty,
-  Public,
+  defineDmmfProperty
 } from '${runtimeDir}/edge-esm.js'`
     : browser
     ? `
 const {
   Decimal,
   objectEnumValues,
-  makeStrictEnum,
-  Public,
+  makeStrictEnum
 } = require('${runtimeDir}/${runtimeName}')
 `
     : `
@@ -66,7 +65,6 @@ const {
   Extensions,
   warnOnce,
   defineDmmfProperty,
-  Public,
 } = require('${runtimeDir}/${runtimeName}')
 `
 }
@@ -99,14 +97,18 @@ Prisma.sql = ${notSupportOnBrowser('sqltag', browser)}
 Prisma.empty = ${notSupportOnBrowser('empty', browser)}
 Prisma.join = ${notSupportOnBrowser('join', browser)}
 Prisma.raw = ${notSupportOnBrowser('raw', browser)}
-Prisma.validator = Public.validator
+Prisma.validator = () => (val) => val
 
-/**
+${ifExtensions(
+  `/**
 * Extensions
 */
 Prisma.getExtensionContext = ${notSupportOnBrowser('Extensions.getExtensionContext', browser)}
 Prisma.defineExtension = ${notSupportOnBrowser('Extensions.defineExtension', browser)}
 
+`,
+  '',
+)}
 /**
  * Shorthand utilities for JSON filtering
  */
@@ -132,21 +134,16 @@ In case this error is unexpected for you, please report it in https://github.com
 
 export const commonCodeTS = ({ runtimeDir, runtimeName, clientVersion, engineVersion }: TSClientOptions) => ({
   tsWithoutNamespace: () => `import * as runtime from '${runtimeDir}/${runtimeName}';
-import $Types = runtime.Types // general types
-import $Public = runtime.Types.Public
-import $Utils = runtime.Types.Utils
-import $Extensions = runtime.Types.Extensions
+type UnwrapPromise<P extends any> = P extends Promise<infer R> ? R : P
+type UnwrapTuple<Tuple extends readonly unknown[]> = {
+  [K in keyof Tuple]: K extends \`\$\{number\}\` ? Tuple[K] extends Prisma.PrismaPromise<infer X> ? X : UnwrapPromise<Tuple[K]> : UnwrapPromise<Tuple[K]>
+};
 
-export type PrismaPromise<T> = $Public.PrismaPromise<T>
+export type PrismaPromise<T> = runtime.Types.Public.PrismaPromise<T>
 `,
   ts: () => `export import DMMF = runtime.DMMF
 
-export type PrismaPromise<T> = $Public.PrismaPromise<T>
-
-/**
- * Validator
- */
-export import validator = runtime.Public.validator
+export type PrismaPromise<T> = runtime.Types.Public.PrismaPromise<T>
 
 /**
  * Prisma Errors
@@ -182,16 +179,20 @@ export type Metric<T> = runtime.Metric<T>
 export type MetricHistogram = runtime.MetricHistogram
 export type MetricHistogramBucket = runtime.MetricHistogramBucket
 
-/**
+${ifExtensions(
+  `/**
 * Extensions
 */
-export type Extension = $Extensions.UserArgs
+export type Extension = runtime.Types.Extensions.UserArgs
 export import getExtensionContext = runtime.Extensions.getExtensionContext
-export type Args<T, F extends $Public.Operation> = $Public.Args<T, F>
-export type Payload<T, F extends $Public.Operation> = $Public.Payload<T, F>
-export type Result<T, A, F extends $Public.Operation> = $Public.Result<T, A, F>
-export type Exact<T, W> = $Public.Exact<T, W>
+export type Args<T, F extends runtime.Types.Public.Operation> = runtime.Types.Public.Args<T, F>
+export type Payload<T, F extends runtime.Types.Public.Operation> = runtime.Types.Public.Payload<T, F>
+export type Result<T, A, F extends runtime.Types.Public.Operation> = runtime.Types.Public.Result<T, A, F>
+export type Exact<T, W> = runtime.Types.Public.Exact<T, W>
 
+`,
+  '',
+)}
 /**
  * Prisma Client JS version: ${clientVersion}
  * Query Engine version: ${engineVersion}
@@ -532,7 +533,7 @@ type Cast<A, B> = A extends B ? A : B;
 
 export const type: unique symbol;
 
-
+export function validator<V>(): <S>(select: runtime.Types.Utils.LegacyExact<S, V>) => S;
 
 /**
  * Used by group by

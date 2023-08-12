@@ -30,7 +30,7 @@ testIf(getQueryEngineProtocol() !== 'json')('client-version-error', async () => 
         cursor?: UserWhereUniqueInput
         take?: Int
         skip?: Int
-        distinct?: UserScalarFieldEnum | List<UserScalarFieldEnum>
+        distinct?: List<UserScalarFieldEnum>
       }
 
 

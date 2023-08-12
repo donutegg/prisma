@@ -492,8 +492,7 @@ test('args - FieldRef', () => {
             "name": {
               "$type": "FieldRef",
               "value": {
-                "_ref": "nickname",
-                "_container": "User"
+                "_ref": "nickname"
               }
             }
           }

@@ -1,7 +1,7 @@
 import { Cache } from '../../../generation/Cache'
 import { lazyProperty } from '../../../generation/lazyProperty'
 import { dmmfToJSModelName } from '../model/utils/dmmfToJSModelName'
-import { Args, BatchQueryOptionsCb, ClientArg, ModelArg, QueryOptionsCb, QueryOptionsPrivate } from './$extends'
+import { Args, ClientArg, ModelArg, QueryOptionsCb } from './$extends'
 import { ComputedFieldsMap, getComputedFields } from './resultUtils'
 
 class MergedExtensionsListNode {
@@ -18,15 +18,6 @@ class MergedExtensionsListNode {
       ...this.previous?.getAllClientExtensions(),
       ...this.extension.client,
     }
-  })
-
-  private batchCallbacks = lazyProperty(() => {
-    const previous: BatchQueryOptionsCb[] = this.previous?.getAllBatchQueryCallbacks() ?? []
-    const newCb = (this.extension as QueryOptionsPrivate).query?.$__internalBatch
-    if (!newCb) {
-      return previous
-    }
-    return previous.concat(newCb)
   })
 
   constructor(public extension: Args, public previous?: MergedExtensionsListNode) {}
@@ -56,13 +47,13 @@ class MergedExtensionsListNode {
     })
   }
 
-  getAllQueryCallbacks(jsModelName: string | '$none', operation: string) {
+  getAllQueryCallbacks(jsModelName: string, operation: string) {
     return this.queryCallbacksCache.getOrCreate(`${jsModelName}:${operation}`, () => {
       const prevCbs = this.previous?.getAllQueryCallbacks(jsModelName, operation) ?? []
       const newCbs: QueryOptionsCb[] = []
       const query = this.extension.query
 
-      if (!query || !(query[jsModelName] || query['$allModels'] || query[operation] || query['$allOperations'])) {
+      if (!query || !(query[jsModelName] || query.$allModels || query[operation])) {
         return prevCbs
       }
 
@@ -78,8 +69,7 @@ class MergedExtensionsListNode {
       }
 
       // when the extension isn't model-bound, apply it to all models
-      // '$none' is a special case for top-level operations without model
-      if (jsModelName !== '$none' && query['$allModels'] !== undefined) {
+      if (query['$allModels'] !== undefined) {
         if (query['$allModels'][operation] !== undefined) {
           newCbs.push(query['$allModels'][operation])
         }
@@ -95,28 +85,17 @@ class MergedExtensionsListNode {
         newCbs.push(query[operation] as QueryOptionsCb)
       }
 
-      // when the extension is not bound to a model & is any top-level operation
-      if (query['$allOperations'] !== undefined) {
-        newCbs.push(query['$allOperations'] as QueryOptionsCb)
-      }
-
       return prevCbs.concat(newCbs)
     })
-  }
-
-  getAllBatchQueryCallbacks() {
-    return this.batchCallbacks.get()
   }
 }
 
 /**
- * Class that holds the list of all extensions, applied to particular instance,
- * as well as resolved versions of the components that need to apply on
- * different levels. Main idea of this class: avoid re-resolving as much of the
- * stuff as possible when new extensions are added while also delaying the
- * resolve until the point it is actually needed. For example, computed fields
- * of the model won't be resolved unless the model is actually queried. Neither
- * adding extensions with `client` component only cause other components to
+ * Class that holds the list of all extensions, applied to particular instance, as well
+ * as resolved versions of the components that need to apply on different levels. Main idea
+ * of this class: avoid re-resolving as much of the stuff as possible when new extensions are added while also
+ * delaying the resolve until the point it is actually needed. For example, computed fields of the model won't be resolved unless
+ * the model is actually queried. Neither adding extensions with `client` component only cause other components to
  * recompute.
  */
 export class MergedExtensionsList {
@@ -152,9 +131,5 @@ export class MergedExtensionsList {
 
   getAllQueryCallbacks(jsModelName: string, operation: string) {
     return this.head?.getAllQueryCallbacks(jsModelName, operation) ?? []
-  }
-
-  getAllBatchQueryCallbacks() {
-    return this.head?.getAllBatchQueryCallbacks() ?? []
   }
 }

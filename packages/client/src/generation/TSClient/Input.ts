@@ -7,6 +7,7 @@ import { GenericArgsInfo } from '../GenericsArgsInfo'
 import * as ts from '../ts-builders'
 import { TAB_SIZE } from './constants'
 import type { Generatable } from './Generatable'
+import { ifExtensions } from './utils/ifExtensions'
 
 export class InputField implements Generatable {
   constructor(
@@ -68,9 +69,11 @@ function buildSingleFieldType(
     type = namedInputType(t.type.name)
   }
 
-  if (type.name.endsWith('Select') || type.name.endsWith('Include')) {
-    type.addGenericArgument(ts.namedType('ExtArgs'))
-  }
+  ifExtensions(() => {
+    if (type.name.endsWith('Select') || type.name.endsWith('Include')) {
+      type.addGenericArgument(ts.namedType('ExtArgs'))
+    }
+  }, undefined)
 
   if (genericsInfo.needsGenericModelArg(t)) {
     if (source) {

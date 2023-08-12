@@ -66,7 +66,7 @@ function modelsLayer(client: Client): CompositeProxyLayer {
   })
 }
 
-export function unApplyModelsAndClientExtensions(client: Client): Client {
+export function unapplyModelsAndClientExtensions(client: Client): Client {
   if (client[rawClient]) {
     return client[rawClient]
   }

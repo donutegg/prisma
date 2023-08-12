@@ -5,8 +5,7 @@ export class PrismaClientRustPanicError extends Error {
 
   constructor(message: string, clientVersion: string) {
     super(message)
-    this.name = "PrismaClientRustPanicError"
-    
+
     this.clientVersion = clientVersion
   }
   get [Symbol.toStringTag]() {

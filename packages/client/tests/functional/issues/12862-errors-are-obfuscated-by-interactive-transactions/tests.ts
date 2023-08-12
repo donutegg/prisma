@@ -13,7 +13,7 @@ testMatrix.setupTestSuite(
       const user = await prisma.user.create({
         data: {
           email: faker.internet.email(),
-          name: faker.person.firstName(),
+          name: faker.name.firstName(),
         },
       })
 
@@ -32,7 +32,7 @@ testMatrix.setupTestSuite(
       const user = await prisma.user.create({
         data: {
           email: faker.internet.email(),
-          name: faker.person.firstName(),
+          name: faker.name.firstName(),
         },
       })
 
@@ -55,7 +55,7 @@ testMatrix.setupTestSuite(
           const user = await client.user.create({
             data: {
               email: faker.internet.email(),
-              name: faker.person.firstName(),
+              name: faker.name.firstName(),
             },
           })
 

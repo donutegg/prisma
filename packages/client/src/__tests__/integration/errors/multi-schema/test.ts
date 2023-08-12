@@ -10,9 +10,9 @@ let prisma: PrismaClient
 const baseUri = process.env.TEST_POSTGRES_URI
 
 const email = faker.internet.email()
-const title = faker.person.jobTitle()
+const title = faker.name.jobTitle()
 const newEmail = faker.internet.email()
-const newTitle = faker.person.jobTitle()
+const newTitle = faker.name.jobTitle()
 
 describe('multischema', () => {
   beforeAll(async () => {
